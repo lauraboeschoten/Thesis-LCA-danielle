@@ -18,6 +18,7 @@ NOTES ON POLCA
 
 Explore options of simulation with poLCA 
 ```{r}
+set.seed(123)
 poLCA.simdata(1000,nclass=3,ndv=4) #ndv is nr of questions 
 simdata <- poLCA.simdata(1000,nclass=3,ndv=10)
 simdata$P #roughly 1/3 each  
