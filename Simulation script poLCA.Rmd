@@ -1,0 +1,11 @@
+---
+title: "Simulation script thesis danielle"
+author: "Daniëlle Remmerswaal"
+date: "29-9-2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
