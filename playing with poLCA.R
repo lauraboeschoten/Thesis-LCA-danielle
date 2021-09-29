@@ -96,11 +96,3 @@ cars5 <- poLCA(carsvars, Cars93,nclass=5)
 
 
 
-## simulation with poLCA ##
-poLCA.simdata(1000,nclass=3,ndv=4) #ndv is nr of questions 
-simdata <- poLCA.simdata(1000,nclass=3,ndv=10)
-simdata$P #roughly 1/3 each  
-simdata$dat #response pattern for each individual (rows) on each question (columns)
-simdata$probs #the class-conditional outcome probabilities for the manifest variables
-simdata$probs[[1]] #how to access each question
-simdata$probs[[4]] [2,4] #prob of answering 4 if in 2d class 

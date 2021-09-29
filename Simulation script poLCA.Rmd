@@ -1,0 +1,31 @@
+---
+title: "Simulation script thesis danielle"
+author: "Daniëlle Remmerswaal"
+date: "29-9-2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(poLCA)
+
+```
+
+NOTES ON POLCA
+* Note that if nrep > 1, then any user-specified probs.start values are only used in the first of the nrep attempts
+* "Because the latent classes are unordered categories, the numerical order of the estimated latent classes in the model output is arbitrary, and is determined solely by the start values of the EM algorithm. (Linzer and Lewis, 2011, poLCA, 4.6)
+
+
+Explore options of simulation with poLCA 
+```{r}
+set.seed(123)
+poLCA.simdata(1000,nclass=3,ndv=4) #ndv is nr of questions 
+simdata <- poLCA.simdata(1000,nclass=3,ndv=10)
+simdata$P #roughly 1/3 each  
+simdata$dat #response pattern for each individual (rows) on each question (columns)
+simdata$probs #the class-conditional outcome probabilities for the manifest variables
+simdata$probs[[1]] #how to access each question
+simdata$probs[[4]] [2,4] #prob of answering 4 if in 2d class 
+
+```
+
