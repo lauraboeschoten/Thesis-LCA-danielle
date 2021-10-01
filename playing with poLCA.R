@@ -32,6 +32,7 @@ class(ch2$y)
 
 prob.YgivenX <- 2 #product of each probabilities for each question given X
 
+#opslaan in matrix o.i.d. met row =, column = 
 #CALCULATION OF POSTERIOR FOR SCORE PATTERN 1,1,1,1
 prob.Y1givenX1 <- ch2$probs[[1]][1,1] * ch2$probs[[2]][1,1] *ch2$probs[[3]][1,1] *ch2$probs[[4]][1,1]
 prob.Y1givenX1
