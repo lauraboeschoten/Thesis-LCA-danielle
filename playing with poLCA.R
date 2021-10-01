@@ -58,7 +58,7 @@ ch2$posterior[282,] #0.263613   #0.736387
 Prob.X2givenY <- (Prob.X[2]*Prob.YgivenX)/Prob.Y
 
 
-
+#this is from an example in a poLCA file
 gpa <-  cbind(LIEEXAM,LIEPAPER,FRAUD,COPYEXAM)~GPA
 ch2c$coeff
 ch2c <- poLCA(gpa, cheating,nclass=2)
