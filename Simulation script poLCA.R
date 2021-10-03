@@ -49,8 +49,26 @@ for(j in 1:3){ #nr of classes
 
 posterior_probs_hand[1:5,]
 posterior_probs[1:5,]
-#note: this comes close but is not equal to posteriors as calculated before: covariate is not taken into account...
+#note: this comes close but is not equal to posteriors as calculated before: 
+  #mistake somewhere in the loops?
+  #covariate is not taken into account yet...
+  #also the first row is missing, this means the loops use input from previous score patterns 
 
 
 
 
+#second try with matrices
+Npatterns <- nrow(responses)
+Nclasses <- ncol(responses)
+prob.y <- c()
+prob.y.given.x <- array(NA,dim=c(Npatterns,Nclasses))
+posterior_probs_hand <- array(NA,dim=c(Npatterns,Nclasses))  #create empty matrix as storage 
+
+for(i in 1:219){ #nr of score patterns
+  for(j in 1:3){ #nr of classes
+    prob.y.given.x[i,j] <- lca$probs$Y1[j,(responses[i,1])]*lca$probs$Y2[j,(responses[i,2])]*lca$probs$Y3[j,(responses[i,3])]*lca$probs$Y4[j,(responses[i,4])]
+    prob.y[i] <- prob.x[1]*prob.y.given.x[i,1]+prob.x[2]*prob.y.given.x[i,2]+prob.x[3]*prob.y.given.x[i,3]
+    posterior_probs_hand[i,j] <-  (prob.x[j]*prob.y.given.x[i,j])/prob.y[i]  
+  }#end loop classes
+}#end loop score patterns
+posterior_probs_hand[1:5,]

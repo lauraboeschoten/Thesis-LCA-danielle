@@ -5,6 +5,10 @@ data("election")
 data("gss82") #2dichotmous 2trichotomous
 data("values") #dichotomous
 
+
+
+
+
 ##NOTES ON POLCA##
 #1. #Note that if nrep > 1, then any user-specified probs.start values are only used in the first of the nrep attempts
 #2. "Because the latent classes are unordered categories, the numerical order of the estimated latent classes in the model output is arbitrary, and is determined solely by the start values of the EM algorithm. (Linzer and Lewis, 2011, poLCA, 4.6)
