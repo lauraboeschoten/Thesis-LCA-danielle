@@ -8,8 +8,10 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(poLCA)
-install.packages("mecor")
-library(mecor)
+install.packages("mecor") 
+library(mecor) #for categorical data
+install.packages("flexmix")
+library(flexmix) #also not suitable 
 ```
 
 NOTES ON POLCA
@@ -17,6 +19,8 @@ NOTES ON POLCA
 * "Because the latent classes are unordered categories, the numerical order of the estimated latent classes in the model output is arbitrary, and is determined solely by the start values of the EM algorithm. (Linzer and Lewis, 2011, poLCA, 4.6)
 
 
+```{r}
+```
 
 
 
