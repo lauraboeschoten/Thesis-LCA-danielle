@@ -1,4 +1,5 @@
 library(poLCA)
+options(scipen = 999) # remove scientific notation
 
 
 #Explore options of simulation with poLCA 
@@ -30,6 +31,9 @@ for(i in 1:219){ #Posterior prob for each class (columns) for each response patt
 posterior_probs[i,] <- poLCA.posterior(lca, y=responses[i,])
 }
 posterior_probs[1:5,]
+
+dataset = cbind(simdata, lca$posterior) #data of all individuals and their posteriors 
+dataset[1:5,]
 
 ##POSTERIOR MEMBERSHIP PROBABILITIES BY HAND
 #Posterior prob for each class (columns) for each response pattern(rows)
