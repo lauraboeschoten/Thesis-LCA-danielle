@@ -50,12 +50,12 @@ for(i in 1:219){ #nr of score patterns
     prob.y.given.x[i,j] <- lca$probs$Y1[j,(responses[i,1])]*lca$probs$Y2[j,(responses[i,2])]*lca$probs$Y3[j,(responses[i,3])]*lca$probs$Y4[j,(responses[i,4])]
     }}
 for(i in 1:219){ #nr of score patterns
-      for(j in 1:3){ #nr of classes
-        prob.y[i] <- prob.x[1]*prob.y.given.x[i,1]+prob.x[2]*prob.y.given.x[i,2]+prob.x[3]*prob.y.given.x[i,3]
+   for(j in 1:3){ #nr of classes
+      prob.y[i] <- prob.x[1]*prob.y.given.x[i,1]+prob.x[2]*prob.y.given.x[i,2]+prob.x[3]*prob.y.given.x[i,3]
        }}
 for(i in 1:219){ #nr of score patterns
-          for(j in 1:3){ #nr of classes
-          posterior_probs_hand2[i,j] <-  (prob.x[j]*prob.y.given.x[i,j])/prob.y[i]  
+    for(j in 1:3){ #nr of classes
+      posterior_probs_hand2[i,j] <-  (prob.x[j]*prob.y.given.x[i,j])/prob.y[i]  
   }#end loop classes
 }#end loop score patterns
 posterior_probs_hand[1:5,]
