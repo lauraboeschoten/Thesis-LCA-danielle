@@ -23,5 +23,6 @@ NOTES ON POLCA
 ```
 
 
-
+Note for git: 
+https://guides.github.com/
 
