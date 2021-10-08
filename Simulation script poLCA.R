@@ -4,7 +4,59 @@ options(scipen = 999) # remove scientific notation
 
 #Explore options of simulation with poLCA 
 set.seed(123)
-sim <- poLCA.simdata(5000,nclass=3,ndv=4, niv=1, nresp = c(3,5,3,5) , missval = TRUE, pctmiss = .15) 
+sim <- poLCA.simdata(5000,nclass=3,ndv=5) 
+sim
+
+dat2 <- poLCA.simdata(5000,nclass=4,missval = F, probs=probs,  niv=2, b=matrix(c(1,0,0,-2),ncol=2,byrow=T))
+dat2 #doen: 4Y, 2X
+
+#probabilities for two classes 
+probs2 <- list(matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05),ncol=3,byrow=T),
+               matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05),ncol=3,byrow=T),
+               matrix(c(0.9,0.05,0.05,
+                        0.05,0.05,0.90),ncol=3,byrow=T),
+               matrix(c(0.05,0.05,0.90,
+                        0.9,0.05,0.05),ncol=3,byrow=T))
+dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2,missval = F,  niv=2) #gesimuleerde dataset voor woningen en bedrijven
+dat1$P # P=c(0.7,0.3) P specificieren heeft geen zin als probs gespecificieerd zijn. 
+dat1$trueclass
+dat1
+dataset <- cbind(dat1$dat,dat1$trueclass)
+dat1_bedrijven <- dat1[dat1$trueclass==1] #alle units met trueclass 1
+length(dat1_bedrijven) #het zijn er 3043
+
+#voor deze units nu data simuleren (en dan de 'oude' variabelen hiermee vervangen) waaruit de sector geclassificeerd kan worden
+#probabilities for three classes 
+probs3 <- list(matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ),
+                      ncol=3,
+                      byrow=TRUE), # Y1
+               matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ),
+                      ncol=3,
+                      byrow=TRUE), # Y2
+               matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ),
+                      ncol=3,
+                      byrow=TRUE))
+dat2 <- poLCA.simdata(N=length(dat1_bedrijven), probs=probs3) #gesimuleerde dataset voor bedrijven (interesse in de SBI, hier 3 sectoren))
+dat2$dat #deze dan toevoegen (als vervanging van vorige gesimuleerde waarden) aan de dataset
+
+
+##tot hier##
+
+
+
+
+
+
+
+
 #ndv is nr of questions , niv=covariate
 prob.X <- sim$P #the probability of being in each class, accessible via []
 sim$nresp #4 questions with 3,5,3 and 5 possible responses
