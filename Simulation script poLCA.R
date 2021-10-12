@@ -1,57 +1,63 @@
 library(poLCA)
 options(scipen = 999) # remove scientific notation
-
-
-#Explore options of simulation with poLCA 
-set.seed(123)
-sim <- poLCA.simdata(5000,nclass=3,ndv=5) 
-sim
-
-dat2 <- poLCA.simdata(5000,nclass=4,missval = F, probs=probs,  niv=2, b=matrix(c(1,0,0,-2),ncol=2,byrow=T))
-dat2 #doen: 4Y, 2X
+set.seed(123) #set.seed for replicability
 
 #probabilities for two classes 
-probs2 <- list(matrix(c(0.9,0.05,0.05,
-                        0.05,0.9,0.05),ncol=3,byrow=T),
-               matrix(c(0.9,0.05,0.05,
-                        0.05,0.9,0.05),ncol=3,byrow=T),
-               matrix(c(0.9,0.05,0.05,
-                        0.05,0.05,0.90),ncol=3,byrow=T),
-               matrix(c(0.05,0.05,0.90,
-                        0.9,0.05,0.05),ncol=3,byrow=T))
-dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2,missval = F,  niv=2) #gesimuleerde dataset voor woningen en bedrijven
-dat1$P # P=c(0.7,0.3) P specificieren heeft geen zin als probs gespecificieerd zijn. 
-dat1$trueclass
-dat1
+probs2 <- list(matrix(c(0.9, 0.1,
+                       0.1, 0.9), ncol=2, byrow=T),
+              matrix(c(0.9, 0.1,
+                       0.1, 0.9), ncol=2, byrow=T),
+              matrix(c(0.9, 0.1,
+                       0.1, 0.9), ncol=2, byrow=T),
+              matrix(c(0.1, 0.9,
+                       0.9, 0.1), ncol=2, byrow=T))
+dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.6,0.4), missval = F,  niv=1) #gesimuleerde dataset voor woningen en bedrijven
+dat1$P # P specificieren heeft geen zin als niv>0 (als er covarianten zijn, dan hangt P daarvan af).
 dataset <- cbind(dat1$dat,dat1$trueclass)
-dat1_bedrijven <- dat1[dat1$trueclass==1] #alle units met trueclass 1
-length(dat1_bedrijven) #het zijn er 3043
 
-#voor deze units nu data simuleren (en dan de 'oude' variabelen hiermee vervangen) waaruit de sector geclassificeerd kan worden
+#elke Y-waarde die 2 is (=bedrijf) vervangen door een nieuwe waarde (die de klasse/sector) aangeeft
+
 #probabilities for three classes 
 probs3 <- list(matrix(c(0.9,0.05,0.05,
                         0.05,0.9,0.05,
-                        0.05,0.05,0.9 ),
-                      ncol=3,
-                      byrow=TRUE), # Y1
+                        0.05,0.05,0.9 ), ncol=3,   byrow=TRUE), # Y1
                matrix(c(0.9,0.05,0.05,
                         0.05,0.9,0.05,
-                        0.05,0.05,0.9 ),
-                      ncol=3,
-                      byrow=TRUE), # Y2
-               matrix(c(0.9,0.05,0.05,
+                        0.05,0.05,0.9 ), ncol=3, byrow=TRUE), # Y2
+               matrix(c(0.90,0.05,0.05,
                         0.05,0.9,0.05,
-                        0.05,0.05,0.9 ),
-                      ncol=3,
-                      byrow=TRUE))
-dat2 <- poLCA.simdata(N=length(dat1_bedrijven), probs=probs3) #gesimuleerde dataset voor bedrijven (interesse in de SBI, hier 3 sectoren))
-dat2$dat #deze dan toevoegen (als vervanging van vorige gesimuleerde waarden) aan de dataset
+                        0.05,0.05,0.9 ), ncol=3, byrow=TRUE), #Y3
+               matrix(c(0.05,0.05,0.90,
+                        0.05,0.9,0.05,
+                        0.90,0.05,0.05 ), ncol=3, byrow=TRUE))#Y4
+set.seed(125)
+dat_sectoren <- poLCA.simdata(N=length(dataset), probs=probs3, niv=2) #gesimuleerde dataset voor bedrijven (interesse in de SBI, hier 3 sectoren))
+#nog toeveoegen, b= 
+dat_sectoren$P
+newdat <- cbind(dat_sectoren$dat[,1:4]+1,dat_sectoren$dat[,5:6]) #+1 zodat '1' hier niet meer voorkomt, dit is de klas van de woningen
+newdat
+
+##replace with or without covariants?
 
 
-##tot hier##
+# tweede probleem is dat dmv sampling (we selecteren alleen degenen waar in dezelfde
+# rij in de andere dataset = bedrijf) misschien de relaties niet zo nauwkeurig worden 
+# behouden als we hadden gesimuleerd
+
+for(i in 1:ncol(df1)){
+  
+  to_replace = which(df1[,i] == 2)
+  
+  df1[,i][to_replace] <- df2[,i][to_replace]
+}
 
 
-
+# derde probleem is dat de relatie met de covariaat alleen geldt voor de dataset
+# waarbij je die hebt gesimuleerd, dus of alleen voor woning/bedrijf of alleen
+# voor de sectoren. 
+# oplossing kan zijn om nu pas, dus achteraf, een covariaat toe te voegen, maar 
+# dat kan dan niet met de poLCA sim functie, dus dat kun je proberen los te 
+# maken door een relatie te specificeren tov 'trueclass' hier. 
 
 
 
@@ -87,7 +93,8 @@ posterior_probs[1:5,]
 dataset = cbind(simdata, lca$posterior) #data of all individuals and their posteriors 
 dataset[1:5,]
 
-##POSTERIOR MEMBERSHIP PROBABILITIES BY HAND
+
+##POSTERIOR MEMBERSHIP PROBABILITIES BY HAND per score pattern
 #Posterior prob for each class (columns) for each response pattern(rows)
 nrow(responses)
 prob.x <- lca$P
@@ -113,5 +120,34 @@ for(i in 1:219){ #nr of score patterns
 posterior_probs_hand[1:5,]
 posterior_probs[1:5,]
 
-#Correct! (matches with polca.posterior function) However, covariate is not taken into account yet for both
+#Correct! (matches with polca.posterior function) However, covariate is not taken into account yet for both(?)
+
+
+
+##POSTERIOR MEMBERSHIP PROBABILITIES BY HAND per individual
+#Posterior prob for each class (columns) for each person (rows)
+nrow(responses)
+prob.x <- lca$P
+Nclasses <- ncol(responses)
+prob.y <- c()
+prob.y.given.x <- array(NA,dim=c(Npatterns,Nclasses))
+posterior_probs_hand2 <- array(NA,dim=c(Npatterns,Nclasses))  #create empty matrix as storage 
+
+for(i in 1:length()){ 
+  for(j in 1:3){ #nr of classes
+    prob.y.given.x[i,j] <- lca$probs$Y1[j,(responses[i,1])]*lca$probs$Y2[j,(responses[i,2])]*lca$probs$Y3[j,(responses[i,3])]*lca$probs$Y4[j,(responses[i,4])]
+  }}
+for(i in 1:219){ #nr of score patterns
+  for(j in 1:3){ #nr of classes
+    prob.y[i] <- prob.x[1]*prob.y.given.x[i,1]+prob.x[2]*prob.y.given.x[i,2]+prob.x[3]*prob.y.given.x[i,3]
+  }}
+for(i in 1:219){ #nr of score patterns
+  for(j in 1:3){ #nr of classes
+    posterior_probs_hand2[i,j] <-  (prob.x[j]*prob.y.given.x[i,j])/prob.y[i]  
+  }#end loop classes
+}#end loop score patterns
+posterior_probs_hand[1:5,]
+posterior_probs[1:5,]
+
+
 
