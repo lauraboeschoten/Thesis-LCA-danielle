@@ -34,22 +34,25 @@ set.seed(125)
 dat_sectoren <- poLCA.simdata(N=length(dataset), probs=probs3, niv=2) #gesimuleerde dataset voor bedrijven (interesse in de SBI, hier 3 sectoren))
 #nog toeveoegen, b= 
 dat_sectoren$P
-newdat <- cbind(dat_sectoren$dat[,1:4]+1,dat_sectoren$dat[,5:6]) #+1 zodat '1' hier niet meer voorkomt, dit is de klas van de woningen
-newdat
+newdat <- cbind(dat_sectoren$dat[,1:4]+1,dat_sectoren$dat[,5:6],dat_sectoren$trueclass+1) #+1 zodat '1' hier niet meer voorkomt, dit is de klas van de woningen
+df2 <- newdat
+dataset
+##replace with or without covariants? probeer allebei een keer (covariants in de 1e simuleren of juist in de 2e)
 
-##replace with or without covariants?
-
-
-# tweede probleem is dat dmv sampling (we selecteren alleen degenen waar in dezelfde
-# rij in de andere dataset = bedrijf) misschien de relaties niet zo nauwkeurig worden 
-# behouden als we hadden gesimuleerd
-
-for(i in 1:ncol(df1)){
+df1 <- dataset
+df2
+for(i in 1:(ncol(df1)-1)){
   
   to_replace = which(df1[,i] == 2)
   
   df1[,i][to_replace] <- df2[,i][to_replace]
 }
+df1
+which(df1[,3] == 2)
+# tweede probleem is dat dmv sampling (we selecteren alleen degenen waar in dezelfde
+# rij in de andere dataset = bedrijf) misschien de relaties niet zo nauwkeurig worden 
+# behouden als we hadden gesimuleerd
+
 
 
 # derde probleem is dat de relatie met de covariaat alleen geldt voor de dataset
