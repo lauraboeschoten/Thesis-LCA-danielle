@@ -11,10 +11,11 @@ probs2 <- list(matrix(c(0.9, 0.1,
                        0.1, 0.9), ncol=2, byrow=T),
               matrix(c(0.1, 0.9,
                        0.9, 0.1), ncol=2, byrow=T))
-dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.6,0.4), missval = F,  niv=1) #gesimuleerde dataset voor woningen en bedrijven
+dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.6,0.4), missval = F) #gesimuleerde dataset voor woningen en bedrijven
+dat1$b
 dat1$P # P specificieren heeft geen zin als niv>0 (als er covarianten zijn, dan hangt P daarvan af).
 dataset <- cbind(dat1$dat,dat1$trueclass)
-
+head(dataset)
 #elke Y-waarde die 2 is (=bedrijf) vervangen door een nieuwe waarde (die de klasse/sector) aangeeft
 
 #probabilities for three classes 
@@ -31,29 +32,43 @@ probs3 <- list(matrix(c(0.9,0.05,0.05,
                         0.05,0.9,0.05,
                         0.90,0.05,0.05 ), ncol=3, byrow=TRUE))#Y4
 set.seed(125)
-dat_sectoren <- poLCA.simdata(N=length(dataset), probs=probs3, niv=2) #gesimuleerde dataset voor bedrijven (interesse in de SBI, hier 3 sectoren))
+dat_sectoren <- poLCA.simdata(N=5000, probs=probs3, niv=2) #gesimuleerde dataset voor bedrijven (interesse in de SBI, hier 3 sectoren))
 #nog toeveoegen, b= 
 dat_sectoren$P
-newdat <- cbind(dat_sectoren$dat[,1:4]+1,dat_sectoren$dat[,5:6],dat_sectoren$trueclass+1) #+1 zodat '1' hier niet meer voorkomt, dit is de klas van de woningen
+newdat <- cbind(dat_sectoren$dat[,1:4]+1,dat_sectoren$dat[,5:6],sectors=dat_sectoren$trueclass+1) #+1 zodat '1' hier niet meer voorkomt, dit is de klas van de woningen
+head(newdat)
 df2 <- newdat
-dataset
-##replace with or without covariants? probeer allebei een keer (covariants in de 1e simuleren of juist in de 2e)
 
+##replace with or without covariants? probeer allebei een keer (covariants in de 1e simuleren of juist in de 2e)
+#voor elke '2' (de bedrijven) die voorkomt in dataset1, deze waarde van Y vervangen door een waarde van dat_sectoren
 df1 <- dataset
-df2
-for(i in 1:(ncol(df1)-1)){
+head(df1)
+head(df2)
+
+for(i in 1:ncol(df1)){
   
   to_replace = which(df1[,i] == 2)
   
   df1[,i][to_replace] <- df2[,i][to_replace]
 }
+
 df1
-which(df1[,3] == 2)
+summary(as.factor(df1[,7])) #how many per class  
+check2 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~X1*X2),data = df1, nclass=2)
+check3 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~X1*X2),data = df1, nclass=3)
+check4 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~X1*X2),data = df1, nclass=4)
+check2$coeff #deze is hetzelfde (lijkt woning vs bedrijf goed te pakken)
+dat1$b
+
+check3$coeff
+check4$coeff
+dat_sectoren$b
+
 # tweede probleem is dat dmv sampling (we selecteren alleen degenen waar in dezelfde
 # rij in de andere dataset = bedrijf) misschien de relaties niet zo nauwkeurig worden 
 # behouden als we hadden gesimuleerd
 
-
+#testen via vastgestelde P
 
 # derde probleem is dat de relatie met de covariaat alleen geldt voor de dataset
 # waarbij je die hebt gesimuleerd, dus of alleen voor woning/bedrijf of alleen
@@ -62,9 +77,13 @@ which(df1[,3] == 2)
 # dat kan dan niet met de poLCA sim functie, dus dat kun je proberen los te 
 # maken door een relatie te specificeren tov 'trueclass' hier. 
 
+#2 mogelijkheden proberen
+#correlatie met trueclass 
 
-
-
+# 
+rnorm(10,0,2)
+head(df1)
+summary(df1$X1)
 
 #ndv is nr of questions , niv=covariate
 prob.X <- sim$P #the probability of being in each class, accessible via []
