@@ -1,0 +1,23 @@
+---
+title: "Opzet LCA MILC TREE"
+author: "Daniëlle Remmerswaal"
+date: "29-10-2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Structuur
+•	Intro
+•	Literatuur
+o	Total error framework 
+o	Verschil MTMM (2 fouten aan meetkant) ik: 1 fout aan meetkant, en 1 fout aan representatiekant
+o	
+•	Methoden
+o	MILC
+o	Tree structuur
+o	Simulatie van data
+	Populatiemodel 
+	Stap voor stap met code
+o	Resultaten
