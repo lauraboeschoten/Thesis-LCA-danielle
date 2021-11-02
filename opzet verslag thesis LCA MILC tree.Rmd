@@ -9,15 +9,90 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 Structuur
-•	Intro
-•	Literatuur
-o	Total error framework 
-o	Verschil MTMM (2 fouten aan meetkant) ik: 1 fout aan meetkant, en 1 fout aan representatiekant
-o	
-•	Methoden
-o	MILC
-o	Tree structuur
-o	Simulatie van data
-	Populatiemodel 
-	Stap voor stap met code
-o	Resultaten
+1.	Intro
+2.	Literatuur
+  o	Total error framework 
+  o	Verschil MTMM (2 fouten aan meetkant) ik: 1 fout aan meetkant, en 1 fout aan representatiekant
+  o	
+3.	Methoden
+  o	MILC
+  o	Tree structuur
+  o	Simulatie van data
+    	Populatiemodel 
+    	Stap voor stap met code
+4.	Resultaten
+
+
+
+# Mentor feedback (12 november)
+Send a version of your report to all students in your mentor group (Cc the mentor) no later than 5 PM on the Friday before the meeting (November 12th). Meeting is wednesday 17 november 
+This whole meeting is about providing and receiving feedback on some aspects of the research report. The focus of the peer feedback is the reproducibility of the research design. Based on the research proposal and feedback from the BoS or your supervisor, you should be able to update your plan for your thesis. It is not needed to have a full report ready by now. The feedback you will give to your peer should be focused on the reproducibility of the research design. That is, will you be able to reproduce the results (which are probably not there yet) with the information provided in the analytic strategy.  It is unnecessary to give feedback on the introduction, although it helps to have n obvious research question and hypotheses.
+
+
+# 1. Introduction
+
+# 2.	Literatuur
+
+## LCA
+Latent Class models are finite mixture models (fmm). (Latent class analysis is binomial fmm, latent profile analysis is gaussian fmm).
+
+* Assumptions
+Two key model assumptions (X is the latent class variable) 
+1. (MIXTURE ASSUMPTION) Joint distribution mixture of 2 class-specific distributions: P(scorepattern)=P(x=1)P(scorepattern|X=1)+ P(x=2)P(scorepattern|X=2). Mixture of C classes. 
+2. (LOCAL INDEPENDENCE ASSUMPTION) Within class X=x, responses are independent. P(scorepattern|X=1)=P(Q1=A1|X=1) * P(Q2=A2|X=1)* P(Q3=A3|X=1). K manifest variables.
+Base calculations of posterior probabilities on mixture and local independence assumption. 
+
+
+* History
+“A general framework for categorical data analysis with discrete latent variables was proposed by Hagenaars (1990) and extended by Vermunt (1997).”
+
+##	Total error framework 
+
+**Verschil MTMM (2 fouten aan meetkant) ik: 1 fout aan meetkant, en 1 fout aan representatiekant**
+
+# 3. Methoden 
+## MILC
+
+## MILC with tree step
+
+### Latent class trees (Mattis van den bergh)
+The data is split and structured into classes by method of a sequential comparison of 1- and 2-class models. The top-down approach continues until the information criterion (e.g. BIC) no longer chooses 2-class models over 1-class models. The splits are performed based on the posterior class membership probabilities of each new class (child nodes) conditional on the class before the splitting (parent node). For the BIC (-2logL+log[N]P), N is the total sample size, not the sample size of the concerned node, and P the number of parameters. A larger BIC value indicates a more important split (a larger improvement of fit). 
+To prevent label switching (order depends on random starting values), the larger class is given number 1 (in the picture the left branch) and the smaller class number 2 (right branch). 
+classification performance in terms of R2Entropy, as a measure.
+Advantages: clear insight in splitting of the classes and how models with different number of classes are related to each other, “the model selection problem reduces to deciding whether a particular split should be accepted” or not. ‘
+The latent class tree approach is an alternative and insightful way to perform a latent class
+Bergh, M. van den, Kollenburg, G.H. van, & Vermunt, J.K. Deciding on the starting number of classes of a Latent Class Tree.
+Non-binary split at the root node of the tree is useful. This approach is then an intermediate between standard LC and LC tree analysis. 
+
+## poLCA package
+The poLCA package is an R software package for the estimation of latent class (regression) models for polytomous outcome variables. Other R packages for categorical outcome variables can only use binary outcomes. 
+
+* how does it work? (avoid overlap with literature) LC models are typically estimated by maximum likelihood, … log-likelihood function … .  EM algorithm, where EM stands for estimation and maximization. 
+
+
+"The latent class regression model further enables the researcher to estimate the effects of covariates on predicting latent class membership."
+
+"poLCA uses expectation-maximization and Newton-Raphson algorithms to find maximum likelihood estimates of the model parameters."
+
+```{r}
+#install.packages("poLCA") #install if not done yet
+library(poLCA) #load the package into memory
+```
+
+
+* label problem 
+"Because the latent classes are unordered categories, the numerical order of the estimated latent classes in the model output is arbitrary, and is determined solely by the start values of the EM algorithm. (Linzer and Lewis, 2011, poLCA, 4.6)
+
+## Data simulation  
+
+
+The data with the two types of errors, the beforementioned selection and classification errors. 
+```{r simsetup}
+library(poLCA) 
+options(scipen = 999) # remove scientific notation
+set.seed(123) #set.seed for replicability
+```
+
+
+
+
