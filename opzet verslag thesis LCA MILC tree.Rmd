@@ -117,15 +117,6 @@ library(poLCA) #load the package into memory
 "Because the latent classes are unordered categories, the numerical order of the estimated latent classes in the model output is arbitrary, and is determined solely by the start values of the EM algorithm. (Linzer and Lewis, 2011, poLCA, 4.6)
 try to fix with label.switching package? more succesful approach is with poLCA.reorder(polcamodel$probs.start, c(1,3,2)) #example to switch order of second and third class. needed are the start probabilities of a model. So this is only a post-hoc fix, and not a general solution. 
 
-## Data simulation  
-
-
-The data with the two types of errors, the beforementioned selection and classification errors. 
-```{r simsetup}
-library(poLCA) 
-options(scipen = 999) # remove scientific notation
-set.seed(123) #set.seed for replicability
-```
 
 Basics of poLCA simulation. 
 ```{r}
@@ -135,6 +126,55 @@ basic.sim <- poLCA.simdata(
   ndv = 4, #nr of manifest variables, standard is 2
 )
 basic.sim$P
+
+```
+* proportions per class
+If not specified, the proportions per class are specified randomly (like in the example above). P can be specified with the proportions for each of the latent classes. 
+```{r}
+basic.sim2 <- poLCA.simdata(N=10000,nclass=3,ndv=4,P=c(0.4, 0.3, 0.3))
+basic.sim2$P
+```
+However, the specified proportions of the classes are 'overruled' when covariates are present.  
+```{r}
+#two covariates added
+set.seed(123)
+basic.sim3 <- poLCA.simdata(N=10000,nclass=3,ndv=4,P=c(0.4, 0.3, 0.3), niv = 2)
+head(basic.sim3$dat) #four manifest variables and two covariates
+basic.sim3$P #due to the covariates, the specified class proportions are overruled
+basic.sim3$b #randomly drawn covariate structure with integers from -2 to 2
+```
+
+The class-conditional outcome probabilities of the manifest variables can be specified. 
+```{r}
+#specify outcome probabilities of the manifest variables 
+set.seed(123)
+#probabilities for three classes for four manifest variables
+probs <- list(matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ), ncol=3,   byrow=TRUE), # Y1
+               matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ), ncol=3, byrow=TRUE), # Y2
+               matrix(c(0.90,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ), ncol=3, byrow=TRUE), #Y3
+               matrix(c(0.05,0.05,0.90,
+                        0.05,0.9,0.05,
+                        0.90,0.05,0.05 ), ncol=3, byrow=TRUE))#Y4
+basic.sim4 <- poLCA.simdata(N=10000,nclass=2,ndv=2,P=c(0.4, 0.3, 0.3), probs= probs3)
+basic.sim4$probs
+```
+As can be seen the probs argument overrules the specification of the number of classes and the number of manifest variables. 
+
+
+## Data simulation  
+
+
+The data with the two types of errors, the beforementioned selection and classification errors. 
+```{r simsetup}
+library(poLCA) 
+options(scipen = 999) # remove scientific notation
+set.seed(123) #set.seed for replicability
 ```
 
 
