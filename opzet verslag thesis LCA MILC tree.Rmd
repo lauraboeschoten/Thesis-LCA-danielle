@@ -64,6 +64,12 @@ Classification via modal assignment: assign unit to latent class with highest P(
 
 ##	Total error framework 
 
+Total Survey Error is "any error arising from the survey process that contributed to the deviation of an estimate from its true parameter value" (Biemer, 2016). TSE all errors that can occur during design, collection, processing, and analysis of survey data. We can divide TSE between sampling and non-sampling errors. Sampling errors are due to sampling a sample instead of a whole population. non-sampling errors include measurements errors (specification(of concept in question), sampling frame, nonresponse, measurement, data processing, and modelling/estimation errors). 
+
+Especially compared to survey data, there is not much statistical theories for assessing the uncertainty of register-based statistics(Holt 2007; in Zhang 2012). Zhang (2012) developed a Total Survey Error framework for administrative datasources. 
+
+
+
 **Verschil MTMM (2 fouten aan meetkant) ik: 1 fout aan meetkant, en 1 fout aan representatiekant**
 
 # 3. Methoden 
@@ -82,6 +88,8 @@ Next, the MILC method and the MILC-method with a latent class tree approach are 
 the latent class tree approach allows for the selection errors (building type) and classification errors (economic sectors) to be distinguished. Without this tree structure, the misclassified buildings will simply get allocated to an additional class. 
 
 ## MILC
+
+How many imputations? check equation EMOS slides, recommendations Boeschoten (2017). 
 
 ## MILC with tree step
 
@@ -121,7 +129,7 @@ try to fix with label.switching package? more succesful approach is with poLCA.r
 Basics of poLCA simulation. 
 ```{r}
 basic.sim <- poLCA.simdata(
-  N=10000, #standard is 5000
+  N=5000, #standard is 5000
   nclass = 3, #nr of latent classes, standard is 2
   ndv = 4, #nr of manifest variables, standard is 2
 )
@@ -131,14 +139,14 @@ basic.sim$P
 * proportions per class
 If not specified, the proportions per class are specified randomly (like in the example above). P can be specified with the proportions for each of the latent classes. 
 ```{r}
-basic.sim2 <- poLCA.simdata(N=10000,nclass=3,ndv=4,P=c(0.4, 0.3, 0.3))
+basic.sim2 <- poLCA.simdata(N=5000,nclass=3,ndv=4,P=c(0.4, 0.3, 0.3))
 basic.sim2$P
 ```
 However, the specified proportions of the classes are 'overruled' when covariates are present.  
 ```{r}
 #two covariates added
 set.seed(123)
-basic.sim3 <- poLCA.simdata(N=10000,nclass=3,ndv=4,P=c(0.4, 0.3, 0.3), niv = 2)
+basic.sim3 <- poLCA.simdata(N=5000,nclass=3,ndv=4,P=c(0.4, 0.3, 0.3), niv = 2)
 head(basic.sim3$dat) #four manifest variables and two covariates
 basic.sim3$P #due to the covariates, the specified class proportions are overruled
 basic.sim3$b #randomly drawn covariate structure with integers from -2 to 2
@@ -161,7 +169,7 @@ probs <- list(matrix(c(0.9,0.05,0.05,
                matrix(c(0.05,0.05,0.90,
                         0.05,0.9,0.05,
                         0.90,0.05,0.05 ), ncol=3, byrow=TRUE))#Y4
-basic.sim4 <- poLCA.simdata(N=10000,nclass=2,ndv=2,P=c(0.4, 0.3, 0.3), probs= probs3)
+basic.sim4 <- poLCA.simdata(N=5000,nclass=2,ndv=2,P=c(0.4, 0.3, 0.3), probs= probs3)
 basic.sim4$probs
 ```
 As can be seen the probs argument overrules the specification of the number of classes and the number of manifest variables. 
@@ -176,6 +184,8 @@ library(poLCA)
 options(scipen = 999) # remove scientific notation
 set.seed(123) #set.seed for replicability
 ```
+
+N = 5000 will be used. Boeschoten (2017) demonstrated that N=10.000 does not yield different/better/... estimates/results. 
 
 
 
