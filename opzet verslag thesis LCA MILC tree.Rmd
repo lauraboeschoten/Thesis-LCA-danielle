@@ -1,32 +1,15 @@
 ---
-title: "Opzet LCA MILC TREE"
+title: "Draft Research Report"
 author: "Daniëlle Remmerswaal"
-date: "29-10-2021"
-output: html_document
+date: "15-11-2021"
+output:
+  word_document: 
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-Structuur
-1.	Intro
-2.	Literatuur
-  o	Total error framework 
-  o	Verschil MTMM (2 fouten aan meetkant) ik: 1 fout aan meetkant, en 1 fout aan representatiekant
-  o	
-3.	Methoden
-  o	MILC
-  o	Tree structuur
-  o	Simulatie van data
-    	Populatiemodel 
-    	Stap voor stap met code
-4.	Resultaten
-
-
-
-# Mentor feedback (12 november)
-Send a version of your report to all students in your mentor group (Cc the mentor) no later than 5 PM on the Friday before the meeting (November 12th). Meeting is wednesday 17 november 
-This whole meeting is about providing and receiving feedback on some aspects of the research report. The focus of the peer feedback is the reproducibility of the research design. Based on the research proposal and feedback from the BoS or your supervisor, you should be able to update your plan for your thesis. It is not needed to have a full report ready by now. The feedback you will give to your peer should be focused on the reproducibility of the research design. That is, will you be able to reproduce the results (which are probably not there yet) with the information provided in the analytic strategy.  It is unnecessary to give feedback on the introduction, although it helps to have n obvious research question and hypotheses.
 
 
 # 1. Introduction
@@ -34,51 +17,75 @@ This whole meeting is about providing and receiving feedback on some aspects of 
 ## 1.1. Problem
 In many cases when official statistics are produced, only a subset from a population is selected. An example is a statistic on the energy consumption per economic sector. From a register containing all buildings in the Netherlands, only establishments are selected, and dwellings discarded. Information on energy consumption per building and on the type of building and, if applicable, the economic sector, is recorded in multiple data sources. To produce the statistic, the data sources, which are not error-free, are combined. In a composite dataset, a combination of registers and surveys on the same statistic, errors become noticeable. In this type of situation we can distinguish between selection errors (regarding the type of building) and classification errors (of the economic sectors). Possible causes of errors are typos during data entry, mismatching definitions (between the data collectors and the CBS researchers), or not having up-to-date answers (Groen, 2012). It is important to estimate and correct errors as to identify and minimize bias in statistics. 
 
+
+## 1.2. short literature (from proposal)
+Several methods have been developed to estimate and correct for errors in categorical data. To estimate errors in data at one time-point, an important method is the latent variable model approach by Biemer (2011), with Latent Class Analysis (LCA) being specifically for errors in categorical variables. For categorical data measured multiple times, Hidden-Markov Models (HMM) can be used (Pavlopoulos & Vermunt, 2015; Pankowska, 2020). In survey research, systematic (caused by survey design) and random measurement error can be simultaneously studied with the multitrait-multimethod (MTMM) approach (Cernat and Oberski, 2018). The latent variable model is applicable on composite datasets under the assumption that the sources are locally independent. Those measurements are then used as the 'indicators' of a latent, unobserved, 'true' variable. The Multiple Imputing Latent Class (MILC) method uses a latent class model to can also be used to correct the true value for categorical errors, and sets the amount of latent classes equal to the number of categories in the variable of interest (Boeschoten, 2019). 
+
 ## 1.3.	 Gap (from proposal)
 For the estimation of categorical errors of one particular type, or in combination with 'method error' (MTMM situation), multiple methods are available to researchers. However, on approaches for situations where misclassifications can be identified as being caused by different error types (e.g. selection or classification error), not much research has been conducted. An unexplored potential solution for this situation, is the use of a latent class tree in combination with the MILC method. In this thesis this new latent class tree approach to the MILC method will be compared to the "normal" MILC method, in which an extra class is added for the wrongly selected units. The structure crucial to the two methods is visualised in section 2.2. with the described energy consumption per economic sector example.  
+
 ## 1.4.	 Research Question, hypotheses and expectations (from proposal)
 This project aims to investigate whether the combination of the MILC-method with a latent class tree approach is an appropriate alternative to the MILC-method, to measure and correct for a combination of selection and classification errors. How well those approaches perform to estimate and correct the errors, will be investigated with a simulation study. Expectation is that the latent class tree structure gives more accurate estimates and more insight in the structure of data with those two types of errors, but is less straightforward to apply.
 
 To perform the simulations and analyse the results, the freely-available opensource statistical software R will be used. In particular, the package poLCA will be used for the data simulation and the latent class analysis. (kopie zin)
 
 
-# 2.	Literatuur
+# 2.	Literature
 
-## 2.1. short (from proposal)
-Several methods have been developed to estimate and correct for errors in categorical data. To estimate errors in data at one time-point, an important method is the latent variable model approach by Biemer (2011), with Latent Class Analysis (LCA) being specifically for errors in categorical variables. For categorical data measured multiple times, Hidden-Markov Models (HMM) can be used (Pavlopoulos & Vermunt, 2015; Pankowska, 2020). In survey research, systematic (caused by survey design) and random measurement error can be simultaneously studied with the multitrait-multimethod (MTMM) approach (Cernat and Oberski, 2018). The latent variable model is applicable on composite datasets under the assumption that the sources are locally independent. Those measurements are then used as the 'indicators' of a latent, unobserved, 'true' variable. The Multiple Imputing Latent Class (MILC) method uses a latent class model to can also be used to correct the true value for categorical errors, and sets the amount of latent classes equal to the number of categories in the variable of interest (Boeschoten, 2019). 
 
-## LCA
-Latent Class models are finite mixture models (fmm). (Latent class analysis is binomial fmm, latent profile analysis is gaussian fmm).
+## 2.1. LCA
+Latent Class models are finite mixture models (fmm). To be more specific, latent class analysis is binomial fmm, latent profile analysis is a gaussian fmm. 
 
 * Assumptions
 Two key model assumptions (X is the latent class variable) 
-1. (MIXTURE ASSUMPTION) Joint distribution mixture of 2 class-specific distributions: P(scorepattern)=P(x=1)P(scorepattern|X=1)+ P(x=2)P(scorepattern|X=2). Mixture of C classes. 
-2. (LOCAL INDEPENDENCE ASSUMPTION) Within class X=x, responses are independent. P(scorepattern|X=1)=P(Q1=A1|X=1) * P(Q2=A2|X=1)* P(Q3=A3|X=1). K manifest variables.
-Base calculations of posterior probabilities on mixture and local independence assumption. 
+1. The mixture assumption.\
+Joint distribution mixture of 2 class-specific distributions: P(scorepattern)=P(x=1)P(scorepattern|X=1)+ P(x=2)P(scorepattern|X=2). Mixture of C classes. 
+2. The local independence assumption: \
+Within class X=x, responses are independent. P(scorepattern|X=1)=P(Q1=A1|X=1) * P(Q2=A2|X=1)* P(Q3=A3|X=1). K manifest variables.
 
-Classification via modal assignment: assign unit to latent class with highest P(X=x|Y=y)=P(Class|scorepattern)
+The calculations of the posterior probabilities are based on the mixture and local independence assumption. 
 
+Classification works via modal assignment: assign unit to latent class with highest P(X=x|Y=y)=P(Class|scorepattern). 
 
-* History
-“A general framework for categorical data analysis with discrete latent variables was proposed by Hagenaars (1990) and extended by Vermunt (1997).”
-
-##	Total error framework 
-
+## 2.2. Total error framework for Registers 
 Total Survey Error is "any error arising from the survey process that contributed to the deviation of an estimate from its true parameter value" (Biemer, 2016). TSE all errors that can occur during design, collection, processing, and analysis of survey data. We can divide TSE between sampling and non-sampling errors. Sampling errors are due to sampling a sample instead of a whole population. non-sampling errors include measurements errors (specification(of concept in question), sampling frame, nonresponse, measurement, data processing, and modelling/estimation errors). 
 
-Especially compared to survey data, there is not much statistical theories for assessing the uncertainty of register-based statistics(Holt 2007; in Zhang 2012). Zhang (2012) developed a Total Survey Error framework for administrative datasources. 
+Registers are generally not created and maintained by statistical agencies themselves, but by external owners (e.g. governments or businesses) for administrative purposes. This can be problematic for statistical agencies because there can be errors without knowing. The household is an important statistical unit, but does not exist in administrative registers, and thus has to be created by statistical agencies. Errors are thus unavoidable. 
 
 
+Zhang (2009) developed a unit-error theory to provide "a framework for evaluating the statistical accuracy of these register-based household statistics". In general, there is a lack of theories to evaluate the quality of register statistics, especially as compared to survey methodology. Related is the flawed assumption that registers are error-free, which they are not. While sampling errors are of course absent, there are other non-sampling errors: "over- and under-coverage, lack of relevance, misclassification, delays and mistakes in the data registration process, inconsistency across the administrative sources, and not the least missing data". This is important as this allows for the "the conceptualization and measurement of the statistical accuracy in register statistics, which will enable us to apply rigorous statistical concepts such as bias, variance, efficiency and consistency, e.g. as one is able to do when it comes to survey sampling."
 
-**Verschil MTMM (2 fouten aan meetkant) ik: 1 fout aan meetkant, en 1 fout aan representatiekant**
+
+Zhang (2012) extended, or generalised, the Total Survey Error framework so that it would be applicable to administrative datasources.  
+![quality assessment framework phase 1 (Zhang 2012)](C:/Users/danie/OneDrive/Statistiek master/Thesis/zhang 2012 TSE phase 1.PNG)
+
+![quality assessment framework phase 2 (Zhang 2012)](C:/Users/danie/OneDrive/Statistiek master/Thesis/quality-assessment-framework-Zhang-2012.jpg)
+
+This framework also enables me to explain the difference between problems that can be solved with the multitrait-multimethod (MTMM) approach and with the MILC-tree method. MTMM is used for situations in survey research where multiple errors on the measurement side are studied. The MILC-tree method attempts to solve situations where there is one type of error on the measurement side (meaurement error, in our case misclassification) and one on the representation side (coverage error), as visible in the figure above called "quality assessment framework phase 1". 
 
 # 3. Methoden 
 
+On simulation studies. "Simulation studies are computer experiments that involve creating data by pseudo-random sampling from known probability distributions. They are an invaluable tool for statistical research, particularly for the evaluation of new methods and for the comparison of alternative methods."(Morris, White and Crowther, 2018)
 ## 3.1. Analytical strategy Overview (from proposal)
-.	Simulated datasets (N=10.000)
-.	Variables: measurements of different datasources on same attribute 
+
+The simulated dataset consists of the following features:
+.	N=5.000
+.	3 indicator variables with 
+o	two levels of selection error (5% and 20%) 
+o	two levels of classification error (5% and 20%) 
+o	generated using a tree structure with selection error first as specified in Figure 2. The proportions of each latent class (in the figure the numbers 1, 2A, 2B and 2C) add up to the total of 1. 
+.	2 categorical covariates, one with strong relation with selection error, and weak relation with classification error, another with the reverse relations. 
+
+![Figure 1: MILC](C:/Users/danie/OneDrive/Statistiek master/Thesis/MILC.PNG)
+
+![Figure 2: TREE MILC](C:/Users/danie/OneDrive/Statistiek master/Thesis/TREE MILC.png)
+
+Next, tree-MILC and MILC are both applied on the simulated datasets, and compared to the original simulated datasets on basis of their classification performance. The performance of the methods will be compared in terms of bias and confidence validity of the proportion of the classes, and their relations with the covariates. 
+
+.	Variables: measurements of different datasources on same attribute
 .	Classes: the categories in variable of interest 
 .	Variation: in the amount of selection and classification errors, and their relative proportions 
+
 To be able to evaluate the performance of the beforementioned extensions of the MILC method to estimate and correct errors, simulated data will be used since herewith 'true values' are available. To perform the simulations and analyse the results, the freely-available opensource statistical software R will be used. In particular, the package poLCA will be used for the data simulation and the latent class analysis.
 
 The simulated composite datasets will contain both selection and classification errors (of varying levels). In the simulated dataset the latent classes are the groups that are potentially misselected or misclassified, and each variable contains information on the categories from one data source. 
@@ -88,19 +95,20 @@ Next, the MILC method and the MILC-method with a latent class tree approach are 
 the latent class tree approach allows for the selection errors (building type) and classification errors (economic sectors) to be distinguished. Without this tree structure, the misclassified buildings will simply get allocated to an additional class. 
 
 ## MILC
-
-How many imputations? check equation EMOS slides, recommendations Boeschoten (2017). 
+For this part, we will use MILC as developed by Boeschoten (2017).
+Step 1: take five bootstrap samples from a simulated dataset.
+Step 2: apply the latent class model to each of the bootstrapped samples, with as number of classes the number of categories in the variable of interest plus one for the misselected units.
+Step 3: Calculate posterior probabilities per profile (for each class and score pattern (variables and covariates)).
+Step 4: Impute dataset with the obtained posterior probabilies 
+Step 5: Pool the 5 imputations with Rubins pooling rules.
+Step 6: Infer statistics of interest (proportions of classes and relations with covariates) and compare to original dataset
 
 ## MILC with tree step
+The same as above, except for step 2. The latent class model is applied twice in the following way:
+Tree step 2a: apply the latent class model to each of the bootstrapped samples with the number of classes being two. One class for the rightly, and one for the wrongly selected units (the first branching in figure 2, represented by the blocks with 1 and 2 in them).
+Tree step 2b: apply the latent class model to the rightly selected units only, with the number of classes being the number of categories in the variable of interest.
 
-### Latent class trees (Mattis van den bergh)
-The data is split and structured into classes by method of a sequential comparison of 1- and 2-class models. The top-down approach continues until the information criterion (e.g. BIC) no longer chooses 2-class models over 1-class models. The splits are performed based on the posterior class membership probabilities of each new class (child nodes) conditional on the class before the splitting (parent node). For the BIC (-2logL+log[N]P), N is the total sample size, not the sample size of the concerned node, and P the number of parameters. A larger BIC value indicates a more important split (a larger improvement of fit). 
-To prevent label switching (order depends on random starting values), the larger class is given number 1 (in the picture the left branch) and the smaller class number 2 (right branch). 
-classification performance in terms of R2Entropy, as a measure.
-Advantages: clear insight in splitting of the classes and how models with different number of classes are related to each other, “the model selection problem reduces to deciding whether a particular split should be accepted” or not. ‘
-The latent class tree approach is an alternative and insightful way to perform a latent class
-Bergh, M. van den, Kollenburg, G.H. van, & Vermunt, J.K. Deciding on the starting number of classes of a Latent Class Tree.
-Non-binary split at the root node of the tree is useful. This approach is then an intermediate between standard LC and LC tree analysis. 
+
 
 ## poLCA package
 
@@ -108,12 +116,7 @@ The poLCA package is an R software package for the estimation of latent class (r
 
 Potential shortcomings: poLCA recodes NA's to a seperate category (zero's) and does not make use of imputation methods.  
 
-* explain: how does it work? (avoid overlap with literature) LC models are typically estimated by maximum likelihood, … log-likelihood function … .  EM algorithm, where EM stands for estimation and maximization. 
 
-
-"The latent class regression model further enables the researcher to estimate the effects of covariates on predicting latent class membership."
-
-"poLCA uses expectation-maximization and Newton-Raphson algorithms to find maximum likelihood estimates of the model parameters."
 
 ```{r}
 #install.packages("poLCA") #install if not done yet
@@ -122,8 +125,13 @@ library(poLCA) #load the package into memory
 
 
 * label problem 
-"Because the latent classes are unordered categories, the numerical order of the estimated latent classes in the model output is arbitrary, and is determined solely by the start values of the EM algorithm. (Linzer and Lewis, 2011, poLCA, 4.6)
-try to fix with label.switching package? more succesful approach is with poLCA.reorder(polcamodel$probs.start, c(1,3,2)) #example to switch order of second and third class. needed are the start probabilities of a model. So this is only a post-hoc fix, and not a general solution. 
+"Because the latent classes are unordered categories, the numerical order of the estimated latent classes in the model output is arbitrary, and is determined solely by the start values of the EM algorithm. (Linzer and Lewis, 2011, poLCA, 4.6) (order depends on random starting values),
+A possibility to fix this is with poLCA.reorder(polcamodel$probs.start, c(1,3,2)) #example to switch order of second and third class. needed are the start probabilities of a model. So this is only a post-hoc fix, and not a general solution.
+
+In latent class tree (LCT) modelling (see graphical representation below), the data is split and structured into classes by method of a sequential comparison of 1- and 2-class models. The top-down approach continues until the information criterion (e.g. BIC) no longer chooses 2-class models over 1-class models. The splits are performed based on the posterior class membership probabilities of each new class (child nodes) conditional on the class before the splitting (parent node). Here, the label switching problem is prevented by assigning the number to to the larger class each time (in the picture the left branch) and the smaller class number 2 (right branch). 
+![graphical representation LCT (van den Bergh,2018)](C:/Users/danie/OneDrive/Statistiek master/Thesis/Van den bergh, LCT graphical representation.PNG)
+
+
 
 
 Basics of poLCA simulation. 
@@ -131,18 +139,20 @@ Basics of poLCA simulation.
 basic.sim <- poLCA.simdata(
   N=5000, #standard is 5000
   nclass = 3, #nr of latent classes, standard is 2
-  ndv = 4, #nr of manifest variables, standard is 2
+  ndv = 4, #nr of indicator variables, standard is 2
 )
 basic.sim$P
+head(basic.sim$dat) #the number of categories per indicator variable is drawn randomly
 
 ```
 * proportions per class
 If not specified, the proportions per class are specified randomly (like in the example above). P can be specified with the proportions for each of the latent classes. 
 ```{r}
+library(poLCA)
 basic.sim2 <- poLCA.simdata(N=5000,nclass=3,ndv=4,P=c(0.4, 0.3, 0.3))
 basic.sim2$P
 ```
-However, the specified proportions of the classes are 'overruled' when covariates are present.  
+However, the specified proportions of the classes are 'overruled' when continuous covariates are present.  
 ```{r}
 #two covariates added
 set.seed(123)
@@ -151,12 +161,15 @@ head(basic.sim3$dat) #four manifest variables and two covariates
 basic.sim3$P #due to the covariates, the specified class proportions are overruled
 basic.sim3$b #randomly drawn covariate structure with integers from -2 to 2
 ```
+Categorical covariates do not have this problem, they allow for specification of the proportions of the classes. Due to this practical reason, and since we are interested in calculating the posterior probabilities per profile (combination of class and score pattern (variables and covariates)), we will add categorical covariates. Categorical covariates will be drawn as if it was another indicator variable but do not represent another data source but a covariate (e.g. gender, age group, or eligibility for rent benefit). 
 
-The class-conditional outcome probabilities of the manifest variables can be specified. 
+
+
+The class-conditional outcome probabilities of the indicator variables can be specified. 
 ```{r}
-#specify outcome probabilities of the manifest variables 
+#specify outcome probabilities of the indicator variables 
 set.seed(123)
-#probabilities for three classes for four manifest variables
+#probabilities for three classes for four indicator variables
 probs <- list(matrix(c(0.9,0.05,0.05,
                         0.05,0.9,0.05,
                         0.05,0.05,0.9 ), ncol=3,   byrow=TRUE), # Y1
@@ -169,10 +182,12 @@ probs <- list(matrix(c(0.9,0.05,0.05,
                matrix(c(0.05,0.05,0.90,
                         0.05,0.9,0.05,
                         0.90,0.05,0.05 ), ncol=3, byrow=TRUE))#Y4
-basic.sim4 <- poLCA.simdata(N=5000,nclass=2,ndv=2,P=c(0.4, 0.3, 0.3), probs= probs3)
+basic.sim4 <- poLCA.simdata(N=5000,nclass=2,ndv=2,P=c(0.4, 0.3, 0.3), probs= probs)
+basic.sim4$P
 basic.sim4$probs
 ```
 As can be seen the probs argument overrules the specification of the number of classes and the number of manifest variables. 
+
 
 
 ## Data simulation  
@@ -187,12 +202,52 @@ set.seed(123) #set.seed for replicability
 
 N = 5000 will be used. Boeschoten (2017) demonstrated that N=10.000 does not yield different/better/... estimates/results. 
 
+## simulation overview
+2x2: selection error (5 or 20%), classification error (5 or 20%)
+For the simulation study I will simulate n=1000 datasets. Now I will simulate one dataset to demonstrate the method. 
+The datasets have to be simulated in two parts, first the selection error, and then the classification error has to be set, and the datasets have to be combined to result in a dataset with a tree-like structure.
+
+For all variants, the following aspects will be the same:
+* N=5000 
+* the same probabilities of the classes 
+* four indicator variables with each ...
+* 
+
+### variant A 
+5% selection error, 5% classification error 
 
 
-# 4. Application
-## 4.1. Introduction to problem
-"Determining the correct activity code of economic units is often rather difficult and prone to errors (e.g., Christensen 2008)."
-Source: Delden, Scholtus and Burger (2015 & 2016)
+```{r}
+set.seed(123)
+#probabilities for three classes for four indicator variables
+probs <- list(matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ), ncol=3,   byrow=TRUE), # Y1
+               matrix(c(0.9,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ), ncol=3, byrow=TRUE), # Y2
+               matrix(c(0.90,0.05,0.05,
+                        0.05,0.9,0.05,
+                        0.05,0.05,0.9 ), ncol=3, byrow=TRUE), #Y3
+               matrix(c(0.05,0.05,0.90,
+                        0.05,0.9,0.05,
+                        0.90,0.05,0.05 ), ncol=3, byrow=TRUE))#Y4
+basic.sim4 <- poLCA.simdata(N=5000,nclass=2,P=c(0.4, 0.3, 0.3), probs= probs)
+basic.sim4$P
+```
+
+### variant B
+5% selection error, 20% classification error 
+### variant C
+20% selection error, 5% classification error 
+### variant D
+20% selection error, 20% classification error 
+
+### Comments
+Still to be added are the categorical covariates. They will be added to the datasets with the polca function as if they were another indicator variable. 
+
+
+
 
 
 

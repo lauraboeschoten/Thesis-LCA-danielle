@@ -172,4 +172,7 @@ posterior_probs_hand[1:5,]
 posterior_probs[1:5,]
 
 
-
+## theory: "Determining the correct activity code of economic units is often rather difficult and prone to errors (e.g., Christensen 2008)."Source: Delden, Scholtus and Burger (2015 & 2016)
+##* explain: how does it work? (avoid overlap with literature) LC models are typically estimated by maximum likelihood, … log-likelihood function … .  EM algorithm, where EM stands for estimation and maximization. 
+##"The latent class regression model further enables the researcher to estimate the effects of covariates on predicting latent class membership."
+##"poLCA uses expectation-maximization and Newton-Raphson algorithms to find maximum likelihood estimates of the model parameters."
