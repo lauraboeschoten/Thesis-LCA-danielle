@@ -1,0 +1,580 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\title{Opzet LCA MILC TREE}
+\author{Daniëlle Remmerswaal}
+\date{29-10-2021}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Opzet LCA MILC TREE},
+  pdfauthor={Daniëlle Remmerswaal},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+\maketitle
+
+Structuur 1. Intro 2. Literatuur o Total error framework o Verschil MTMM
+(2 fouten aan meetkant) ik: 1 fout aan meetkant, en 1 fout aan
+representatiekant o 3. Methoden o MILC o Tree structuur o Simulatie van
+data Populatiemodel Stap voor stap met code 4. Resultaten
+
+\hypertarget{mentor-feedback-12-november}{%
+\section{Mentor feedback (12
+november)}\label{mentor-feedback-12-november}}
+
+Send a version of your report to all students in your mentor group (Cc
+the mentor) no later than 5 PM on the Friday before the meeting
+(November 12th). Meeting is wednesday 17 november This whole meeting is
+about providing and receiving feedback on some aspects of the research
+report. The focus of the peer feedback is the reproducibility of the
+research design. Based on the research proposal and feedback from the
+BoS or your supervisor, you should be able to update your plan for your
+thesis. It is not needed to have a full report ready by now. The
+feedback you will give to your peer should be focused on the
+reproducibility of the research design. That is, will you be able to
+reproduce the results (which are probably not there yet) with the
+information provided in the analytic strategy. It is unnecessary to give
+feedback on the introduction, although it helps to have n obvious
+research question and hypotheses.
+
+\hypertarget{introduction}{%
+\section{1. Introduction}\label{introduction}}
+
+\hypertarget{problem}{%
+\subsection{1.1. Problem}\label{problem}}
+
+In many cases when official statistics are produced, only a subset from
+a population is selected. An example is a statistic on the energy
+consumption per economic sector. From a register containing all
+buildings in the Netherlands, only establishments are selected, and
+dwellings discarded. Information on energy consumption per building and
+on the type of building and, if applicable, the economic sector, is
+recorded in multiple data sources. To produce the statistic, the data
+sources, which are not error-free, are combined. In a composite dataset,
+a combination of registers and surveys on the same statistic, errors
+become noticeable. In this type of situation we can distinguish between
+selection errors (regarding the type of building) and classification
+errors (of the economic sectors). Possible causes of errors are typos
+during data entry, mismatching definitions (between the data collectors
+and the CBS researchers), or not having up-to-date answers (Groen,
+2012). It is important to estimate and correct errors as to identify and
+minimize bias in statistics.
+
+\hypertarget{gap-from-proposal}{%
+\subsection{1.3. Gap (from proposal)}\label{gap-from-proposal}}
+
+For the estimation of categorical errors of one particular type, or in
+combination with `method error' (MTMM situation), multiple methods are
+available to researchers. However, on approaches for situations where
+misclassifications can be identified as being caused by different error
+types (e.g.~selection or classification error), not much research has
+been conducted. An unexplored potential solution for this situation, is
+the use of a latent class tree in combination with the MILC method. In
+this thesis this new latent class tree approach to the MILC method will
+be compared to the ``normal'' MILC method, in which an extra class is
+added for the wrongly selected units. The structure crucial to the two
+methods is visualised in section 2.2. with the described energy
+consumption per economic sector example.\\
+\#\# 1.4. Research Question, hypotheses and expectations (from proposal)
+This project aims to investigate whether the combination of the
+MILC-method with a latent class tree approach is an appropriate
+alternative to the MILC-method, to measure and correct for a combination
+of selection and classification errors. How well those approaches
+perform to estimate and correct the errors, will be investigated with a
+simulation study. Expectation is that the latent class tree structure
+gives more accurate estimates and more insight in the structure of data
+with those two types of errors, but is less straightforward to apply.
+
+To perform the simulations and analyse the results, the freely-available
+opensource statistical software R will be used. In particular, the
+package poLCA will be used for the data simulation and the latent class
+analysis. (kopie zin)
+
+\hypertarget{literatuur}{%
+\section{2. Literatuur}\label{literatuur}}
+
+\hypertarget{short-from-proposal}{%
+\subsection{2.1. short (from proposal)}\label{short-from-proposal}}
+
+Several methods have been developed to estimate and correct for errors
+in categorical data. To estimate errors in data at one time-point, an
+important method is the latent variable model approach by Biemer (2011),
+with Latent Class Analysis (LCA) being specifically for errors in
+categorical variables. For categorical data measured multiple times,
+Hidden-Markov Models (HMM) can be used (Pavlopoulos \& Vermunt, 2015;
+Pankowska, 2020). In survey research, systematic (caused by survey
+design) and random measurement error can be simultaneously studied with
+the multitrait-multimethod (MTMM) approach (Cernat and Oberski, 2018).
+The latent variable model is applicable on composite datasets under the
+assumption that the sources are locally independent. Those measurements
+are then used as the `indicators' of a latent, unobserved, `true'
+variable. The Multiple Imputing Latent Class (MILC) method uses a latent
+class model to can also be used to correct the true value for
+categorical errors, and sets the amount of latent classes equal to the
+number of categories in the variable of interest (Boeschoten, 2019).
+
+\hypertarget{lca}{%
+\subsection{LCA}\label{lca}}
+
+Latent Class models are finite mixture models (fmm). (Latent class
+analysis is binomial fmm, latent profile analysis is gaussian fmm).
+
+\begin{itemize}
+\tightlist
+\item
+  Assumptions Two key model assumptions (X is the latent class variable)
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  (MIXTURE ASSUMPTION) Joint distribution mixture of 2 class-specific
+  distributions: P(scorepattern)=P(x=1)P(scorepattern\textbar X=1)+
+  P(x=2)P(scorepattern\textbar X=2). Mixture of C classes.
+\item
+  (LOCAL INDEPENDENCE ASSUMPTION) Within class X=x, responses are
+  independent. P(scorepattern\textbar X=1)=P(Q1=A1\textbar X=1) *
+  P(Q2=A2\textbar X=1)* P(Q3=A3\textbar X=1). K manifest variables. Base
+  calculations of posterior probabilities on mixture and local
+  independence assumption.
+\end{enumerate}
+
+Classification via modal assignment: assign unit to latent class with
+highest P(X=x\textbar Y=y)=P(Class\textbar scorepattern)
+
+\begin{itemize}
+\tightlist
+\item
+  History ``A general framework for categorical data analysis with
+  discrete latent variables was proposed by Hagenaars (1990) and
+  extended by Vermunt (1997).''
+\end{itemize}
+
+\hypertarget{total-error-framework}{%
+\subsection{Total error framework}\label{total-error-framework}}
+
+Total Survey Error is ``any error arising from the survey process that
+contributed to the deviation of an estimate from its true parameter
+value'' (Biemer, 2016). TSE all errors that can occur during design,
+collection, processing, and analysis of survey data. We can divide TSE
+between sampling and non-sampling errors. Sampling errors are due to
+sampling a sample instead of a whole population. non-sampling errors
+include measurements errors (specification(of concept in question),
+sampling frame, nonresponse, measurement, data processing, and
+modelling/estimation errors).
+
+Especially compared to survey data, there is not much statistical
+theories for assessing the uncertainty of register-based statistics(Holt
+2007; in Zhang 2012). Zhang (2012) developed a Total Survey Error
+framework for administrative datasources.
+
+\textbf{Verschil MTMM (2 fouten aan meetkant) ik: 1 fout aan meetkant,
+en 1 fout aan representatiekant}
+
+\hypertarget{methoden}{%
+\section{3. Methoden}\label{methoden}}
+
+\hypertarget{analytical-strategy-overview-from-proposal}{%
+\subsection{3.1. Analytical strategy Overview (from
+proposal)}\label{analytical-strategy-overview-from-proposal}}
+
+. Simulated datasets (N=10.000) . Variables: measurements of different
+datasources on same attribute . Classes: the categories in variable of
+interest . Variation: in the amount of selection and classification
+errors, and their relative proportions To be able to evaluate the
+performance of the beforementioned extensions of the MILC method to
+estimate and correct errors, simulated data will be used since herewith
+`true values' are available. To perform the simulations and analyse the
+results, the freely-available opensource statistical software R will be
+used. In particular, the package poLCA will be used for the data
+simulation and the latent class analysis.
+
+The simulated composite datasets will contain both selection and
+classification errors (of varying levels). In the simulated dataset the
+latent classes are the groups that are potentially misselected or
+misclassified, and each variable contains information on the categories
+from one data source. Next, the MILC method and the MILC-method with a
+latent class tree approach are both applied on the simulated datasets.
+The performance of the classifications of both methods is evaluated by
+comparing it to the original simulated datasets. The accuracy of the
+methods will be compared in terms of bias and confidence validity of the
+statistic under investigation, the proportion of the classes, and on how
+well they estimate the (relative) size of the two errors.
+
+the latent class tree approach allows for the selection errors (building
+type) and classification errors (economic sectors) to be distinguished.
+Without this tree structure, the misclassified buildings will simply get
+allocated to an additional class.
+
+\hypertarget{milc}{%
+\subsection{MILC}\label{milc}}
+
+How many imputations? see recommendations Boeschoten (2017).
+
+\hypertarget{milc-with-tree-step}{%
+\subsection{MILC with tree step}\label{milc-with-tree-step}}
+
+\hypertarget{latent-class-trees-mattis-van-den-bergh}{%
+\subsubsection{Latent class trees (Mattis van den
+bergh)}\label{latent-class-trees-mattis-van-den-bergh}}
+
+The data is split and structured into classes by method of a sequential
+comparison of 1- and 2-class models. The top-down approach continues
+until the information criterion (e.g.~BIC) no longer chooses 2-class
+models over 1-class models. The splits are performed based on the
+posterior class membership probabilities of each new class (child nodes)
+conditional on the class before the splitting (parent node). For the BIC
+(-2logL+log{[}N{]}P), N is the total sample size, not the sample size of
+the concerned node, and P the number of parameters. A larger BIC value
+indicates a more important split (a larger improvement of fit). To
+prevent label switching (order depends on random starting values), the
+larger class is given number 1 (in the picture the left branch) and the
+smaller class number 2 (right branch). classification performance in
+terms of R2Entropy, as a measure. Advantages: clear insight in splitting
+of the classes and how models with different number of classes are
+related to each other, ``the model selection problem reduces to deciding
+whether a particular split should be accepted'' or not. ` The latent
+class tree approach is an alternative and insightful way to perform a
+latent class Bergh, M. van den, Kollenburg, G.H. van, \& Vermunt, J.K.
+Deciding on the starting number of classes of a Latent Class Tree.
+Non-binary split at the root node of the tree is useful. This approach
+is then an intermediate between standard LC and LC tree analysis.
+
+\hypertarget{polca-package}{%
+\subsection{poLCA package}\label{polca-package}}
+
+The poLCA package is an R software package for the estimation of latent
+class (regression) models for polytomous outcome variables. It is
+currently the only R package that allows the use of polytomous outcomes,
+and covariates. Other R packages for categorical outcome variables can
+only use binary outcomes.
+
+Potential shortcomings: poLCA recodes NA's to a seperate category
+(zero's) and does not make use of imputation methods.
+
+\begin{itemize}
+\tightlist
+\item
+  explain: how does it work? (avoid overlap with literature) LC models
+  are typically estimated by maximum likelihood, \ldots{} log-likelihood
+  function \ldots{} . EM algorithm, where EM stands for estimation and
+  maximization.
+\end{itemize}
+
+``The latent class regression model further enables the researcher to
+estimate the effects of covariates on predicting latent class
+membership.''
+
+``poLCA uses expectation-maximization and Newton-Raphson algorithms to
+find maximum likelihood estimates of the model parameters.''
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#install.packages("poLCA") \#install if not done yet}
+\FunctionTok{library}\NormalTok{(poLCA) }\CommentTok{\#load the package into memory}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: scatterplot3d
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: MASS
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  label problem ``Because the latent classes are unordered categories,
+  the numerical order of the estimated latent classes in the model
+  output is arbitrary, and is determined solely by the start values of
+  the EM algorithm. (Linzer and Lewis, 2011, poLCA, 4.6) try to fix with
+  label.switching package? more succesful approach is with
+  poLCA.reorder(polcamodel\$probs.start, c(1,3,2)) \#example to switch
+  order of second and third class. needed are the start probabilities of
+  a model. So this is only a post-hoc fix, and not a general solution.
+\end{itemize}
+
+Basics of poLCA simulation.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{basic.sim }\OtherTok{\textless{}{-}} \FunctionTok{poLCA.simdata}\NormalTok{(}
+  \AttributeTok{N=}\DecValTok{5000}\NormalTok{, }\CommentTok{\#standard is 5000}
+  \AttributeTok{nclass =} \DecValTok{3}\NormalTok{, }\CommentTok{\#nr of latent classes, standard is 2}
+  \AttributeTok{ndv =} \DecValTok{4}\NormalTok{, }\CommentTok{\#nr of manifest variables, standard is 2}
+\NormalTok{)}
+\NormalTok{basic.sim}\SpecialCharTok{$}\NormalTok{P}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.05770074 0.37173654 0.57056271
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  proportions per class If not specified, the proportions per class are
+  specified randomly (like in the example above). P can be specified
+  with the proportions for each of the latent classes.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{basic.sim2 }\OtherTok{\textless{}{-}} \FunctionTok{poLCA.simdata}\NormalTok{(}\AttributeTok{N=}\DecValTok{5000}\NormalTok{,}\AttributeTok{nclass=}\DecValTok{3}\NormalTok{,}\AttributeTok{ndv=}\DecValTok{4}\NormalTok{,}\AttributeTok{P=}\FunctionTok{c}\NormalTok{(}\FloatTok{0.4}\NormalTok{, }\FloatTok{0.3}\NormalTok{, }\FloatTok{0.3}\NormalTok{))}
+\NormalTok{basic.sim2}\SpecialCharTok{$}\NormalTok{P}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4 0.3 0.3
+\end{verbatim}
+
+However, the specified proportions of the classes are `overruled' when
+covariates are present.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#two covariates added}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{basic.sim3 }\OtherTok{\textless{}{-}} \FunctionTok{poLCA.simdata}\NormalTok{(}\AttributeTok{N=}\DecValTok{5000}\NormalTok{,}\AttributeTok{nclass=}\DecValTok{3}\NormalTok{,}\AttributeTok{ndv=}\DecValTok{4}\NormalTok{,}\AttributeTok{P=}\FunctionTok{c}\NormalTok{(}\FloatTok{0.4}\NormalTok{, }\FloatTok{0.3}\NormalTok{, }\FloatTok{0.3}\NormalTok{), }\AttributeTok{niv =} \DecValTok{2}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(basic.sim3}\SpecialCharTok{$}\NormalTok{dat) }\CommentTok{\#four manifest variables and two covariates}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Y1 Y2 Y3 Y4         X1         X2
+## 1  1  3  2  1  0.8377870  1.3424605
+## 2  2  4  2  5  0.1533731  0.1235129
+## 3  2  1  2  4 -1.1381369  0.8581478
+## 4  1  4  2  5  1.2538149 -1.4054279
+## 5  3  1  2  5  0.4264642 -0.0144571
+## 6  2  4  3  1 -0.2950715  0.5455757
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{basic.sim3}\SpecialCharTok{$}\NormalTok{P }\CommentTok{\#due to the covariates, the specified class proportions are overruled}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.4999831 0.1680110 0.3320059
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{basic.sim3}\SpecialCharTok{$}\NormalTok{b }\CommentTok{\#randomly drawn covariate structure with integers from {-}2 to 2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2]
+## [1,]   -1   -1
+## [2,]   -1   -2
+## [3,]    0   -2
+\end{verbatim}
+
+The class-conditional outcome probabilities of the manifest variables
+can be specified.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#specify outcome probabilities of the manifest variables }
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\CommentTok{\#probabilities for three classes for four manifest variables}
+\NormalTok{probs }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FloatTok{0.9}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}
+                        \FloatTok{0.05}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}
+                        \FloatTok{0.05}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.9}\NormalTok{ ), }\AttributeTok{ncol=}\DecValTok{3}\NormalTok{,   }\AttributeTok{byrow=}\ConstantTok{TRUE}\NormalTok{), }\CommentTok{\# Y1}
+               \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FloatTok{0.9}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}
+                        \FloatTok{0.05}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}
+                        \FloatTok{0.05}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.9}\NormalTok{ ), }\AttributeTok{ncol=}\DecValTok{3}\NormalTok{, }\AttributeTok{byrow=}\ConstantTok{TRUE}\NormalTok{), }\CommentTok{\# Y2}
+               \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FloatTok{0.90}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}
+                        \FloatTok{0.05}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}
+                        \FloatTok{0.05}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.9}\NormalTok{ ), }\AttributeTok{ncol=}\DecValTok{3}\NormalTok{, }\AttributeTok{byrow=}\ConstantTok{TRUE}\NormalTok{), }\CommentTok{\#Y3}
+               \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.90}\NormalTok{,}
+                        \FloatTok{0.05}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}
+                        \FloatTok{0.90}\NormalTok{,}\FloatTok{0.05}\NormalTok{,}\FloatTok{0.05}\NormalTok{ ), }\AttributeTok{ncol=}\DecValTok{3}\NormalTok{, }\AttributeTok{byrow=}\ConstantTok{TRUE}\NormalTok{))}\CommentTok{\#Y4}
+\NormalTok{basic.sim4 }\OtherTok{\textless{}{-}} \FunctionTok{poLCA.simdata}\NormalTok{(}\AttributeTok{N=}\DecValTok{5000}\NormalTok{,}\AttributeTok{nclass=}\DecValTok{2}\NormalTok{,}\AttributeTok{ndv=}\DecValTok{2}\NormalTok{,}\AttributeTok{P=}\FunctionTok{c}\NormalTok{(}\FloatTok{0.4}\NormalTok{, }\FloatTok{0.3}\NormalTok{, }\FloatTok{0.3}\NormalTok{), }\AttributeTok{probs=}\NormalTok{ probs)}
+\NormalTok{basic.sim4}\SpecialCharTok{$}\NormalTok{probs}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+##      [,1] [,2] [,3]
+## [1,] 0.90 0.05 0.05
+## [2,] 0.05 0.90 0.05
+## [3,] 0.05 0.05 0.90
+## 
+## [[2]]
+##      [,1] [,2] [,3]
+## [1,] 0.90 0.05 0.05
+## [2,] 0.05 0.90 0.05
+## [3,] 0.05 0.05 0.90
+## 
+## [[3]]
+##      [,1] [,2] [,3]
+## [1,] 0.90 0.05 0.05
+## [2,] 0.05 0.90 0.05
+## [3,] 0.05 0.05 0.90
+## 
+## [[4]]
+##      [,1] [,2] [,3]
+## [1,] 0.05 0.05 0.90
+## [2,] 0.05 0.90 0.05
+## [3,] 0.90 0.05 0.05
+\end{verbatim}
+
+As can be seen the probs argument overrules the specification of the
+number of classes and the number of manifest variables.
+
+\hypertarget{data-simulation}{%
+\subsection{Data simulation}\label{data-simulation}}
+
+The data with the two types of errors, the beforementioned selection and
+classification errors.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(poLCA) }
+\FunctionTok{options}\NormalTok{(}\AttributeTok{scipen =} \DecValTok{999}\NormalTok{) }\CommentTok{\# remove scientific notation}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{) }\CommentTok{\#set.seed for replicability}
+\end{Highlighting}
+\end{Shaded}
+
+N = 5000 will be used. Boeschoten (2017) demonstrated that N=10.000 does
+not yield different/better/\ldots{} estimates/results.
+
+\hypertarget{application}{%
+\section{4. Application}\label{application}}
+
+\hypertarget{introduction-to-problem}{%
+\subsection{4.1. Introduction to
+problem}\label{introduction-to-problem}}
+
+``Determining the correct activity code of economic units is often
+rather difficult and prone to errors (e.g., Christensen 2008).'' Source:
+Delden, Scholtus and Burger (2015 \& 2016)
+
+\hypertarget{household-statistics}{%
+\subsection{4.2. household statistics}\label{household-statistics}}
+
+The household is an important statistical unit, but does not exist in
+administrative registers, and thus has to be created by statistical
+agencies. Errors are thus unavoidable. *general theory (maybe in
+literature?) Registers themselves are generally not created and
+maintained by statistical agencies themselves, but by external owners
+(e.g.~governments or businesses) for administrative purposes. Zhang
+(2009) developed a unit-error theory to provide ``a framework for
+evaluating the statistical accuracy of these register-based household
+statistics''. In general, there is a lack of theories to evaluate the
+quality of register statistics, especially as compared to survey
+methodology. Related is the flawed assumption that registers are
+error-free, which they are not. While sampling errors are ofcourse
+absent, there are other non-sampling errors: ``over- and under-coverage,
+lack of relevance, misclassification, delays and mistakes in the data
+registration process, inconsistency across the administrative sources,
+and not the least missing data''. This is important
+
+\end{document}

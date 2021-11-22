@@ -11,7 +11,7 @@ probs2 <- list(matrix(c(0.9, 0.1,
                        0.1, 0.9), ncol=2, byrow=T),
               matrix(c(0.1, 0.9,
                        0.9, 0.1), ncol=2, byrow=T))
-dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.6,0.4), missval = F) #gesimuleerde dataset voor woningen en bedrijven
+dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.2,0.8), missval = F) #gesimuleerde dataset voor woningen en bedrijven
 dat1$b
 dat1$P # P specificieren heeft geen zin als niv>0 (als er covarianten zijn, dan hangt P daarvan af).
 dataset <- cbind(dat1$dat,dat1$trueclass)
@@ -32,10 +32,9 @@ probs3 <- list(matrix(c(0.9,0.05,0.05,
                         0.05,0.9,0.05,
                         0.90,0.05,0.05 ), ncol=3, byrow=TRUE))#Y4
 set.seed(125)
-dat_sectoren <- poLCA.simdata(N=5000, probs=probs3, niv=2) #gesimuleerde dataset voor bedrijven (interesse in de SBI, hier 3 sectoren))
-#nog toeveoegen, b= 
+dat_sectoren <- poLCA.simdata(N=5000, P=(c(0.4,0.35,0.25)), probs=probs3) 
 dat_sectoren$P
-newdat <- cbind(dat_sectoren$dat[,1:4]+1,dat_sectoren$dat[,5:6],sectors=dat_sectoren$trueclass+1) #+1 zodat '1' hier niet meer voorkomt, dit is de klas van de woningen
+newdat <- cbind(dat_sectoren$dat[,1:4]+1,sectors=dat_sectoren$trueclass+1) #+1 zodat '1' hier niet meer voorkomt, dit is de klas van de woningen
 head(newdat)
 df2 <- newdat
 
@@ -46,20 +45,21 @@ head(df1)
 head(df2)
 
 for(i in 1:ncol(df1)){
-  
   to_replace = which(df1[,i] == 2)
-  
   df1[,i][to_replace] <- df2[,i][to_replace]
 }
 
-df1
-summary(as.factor(df1[,7])) #how many per class  
-check2 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~X1*X2),data = df1, nclass=2)
-check3 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~X1*X2),data = df1, nclass=3)
-check4 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~X1*X2),data = df1, nclass=4)
+head(df1)
+summary((as.factor(df1[,5]))) #how many per class  
+check2 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), nrep = 10,data = df1, nclass=2) #0.33 en 0.67 (label problem!)
+    df_tree2 <- cbind(df1,check2$predclass)
+    selected2 <-  df_tree2[which(df_tree2[,6]==2),]
+    df_tree2[which(df_tree2$`check2$predclass`==2),]
+    check2_3 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1),data = selected2, nclass=3)
+check3 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1),data = df1, nclass=3) #0.2, 0.2, 0.6
+check4 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1),data = df1, nclass=4) #0.2, 0.33, 0.2 , 0.28
 check2$coeff #deze is hetzelfde (lijkt woning vs bedrijf goed te pakken)
 dat1$b
-
 check3$coeff
 check4$coeff
 dat_sectoren$b
