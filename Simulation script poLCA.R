@@ -80,10 +80,6 @@ dat_sectoren$b
 #2 mogelijkheden proberen
 #correlatie met trueclass 
 
-# 
-rnorm(10,0,2)
-head(df1)
-summary(df1$X1)
 
 #ndv is nr of questions , niv=covariate
 prob.X <- sim$P #the probability of being in each class, accessible via []
