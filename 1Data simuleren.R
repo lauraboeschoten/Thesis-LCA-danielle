@@ -67,7 +67,7 @@ probs2 <- list(matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T),
                matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T),
                matrix(c(0.05, 0.95,     0.95, 0.05), ncol=2, byrow=T))
 dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.2,0.8), missval = F) 
-df1 <- cbind(dat1$dat,dat1$trueclass)
+df1 <- cbind(dat1$dat,trueclass=dat1$trueclass)
 head(df1)
 #probabilities with 5% classification error for three classes 
 probs3 <- list(matrix(c(0.95,0.025,0.025,    0.025,0.95,0.025,    0.025,0.025,0.95 ), ncol=3, byrow=TRUE), # Y1
@@ -98,7 +98,7 @@ probs2 <- list(matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T),
                matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T),
                matrix(c(0.05, 0.95,     0.95, 0.05), ncol=2, byrow=T))
 dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.2,0.8), missval = F) 
-df1 <- cbind(dat1$dat,dat1$trueclass)
+df1 <- cbind(dat1$dat,trueclass=dat1$trueclass)
 head(df1)
 #probabilities for three classes 
 probs3 <- list(matrix(c(0.8,0.1,0.1,    0.1,0.8,0.1,     0.1,0.1,0.8 ), ncol=3,   byrow=TRUE), # Y1
@@ -132,7 +132,7 @@ probs2 <- list(matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T),
                matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T),
                matrix(c(0.2, 0.8,     0.8, 0.2), ncol=2, byrow=T))
 dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.2,0.8), missval = F) 
-df1 <- cbind(dat1$dat,dat1$trueclass)
+df1 <- cbind(dat1$dat,trueclass=dat1$trueclass)
 head(df1)
 #probabilities for three classes 
 probs3 <- list(matrix(c(0.95,0.025,0.025,    0.025,0.95,0.025,    0.025,0.025,0.95 ), ncol=3, byrow=TRUE), # Y1
@@ -166,7 +166,7 @@ probs2 <- list(matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T),
                matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T),
                matrix(c(0.2, 0.8,     0.8, 0.2), ncol=2, byrow=T))
 dat1 <- poLCA.simdata(5000,nclass=2,probs= probs2, P= c(0.2,0.8), missval = F) 
-df1 <- cbind(dat1$dat,dat1$trueclass)
+df1 <- cbind(dat1$dat,trueclass=dat1$trueclass)
 dat1$P
 head(df1)
 #probabilities for three classes (classification error)
@@ -195,3 +195,5 @@ summary((as.factor(Dat_var_D[,5]))) #how many per class
 
 #-----------------------------------NOTES------------------------------------#
 #due to the replacement of 80% of the first dataset, the relations might not remain as accurate as we simulated.
+#-> we can see this in the calculation of the posteriors since we have to calculate the $probs of the combined dataset
+
