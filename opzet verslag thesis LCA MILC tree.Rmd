@@ -55,6 +55,11 @@ Registers are generally not created and maintained by statistical agencies thems
 
 Zhang (2009) developed a unit-error theory to provide "a framework for evaluating the statistical accuracy of these register-based household statistics". In general, there is a lack of theories to evaluate the quality of register statistics, especially as compared to survey methodology. Related is the flawed assumption that registers are error-free, which they are not. While sampling errors are of course absent, there are other non-sampling errors: "over- and under-coverage, lack of relevance, misclassification, delays and mistakes in the data registration process, inconsistency across the administrative sources, and not the least missing data". This is important as this allows for the "the conceptualization and measurement of the statistical accuracy in register statistics, which will enable us to apply rigorous statistical concepts such as bias, variance, efficiency and consistency, e.g. as one is able to do when it comes to survey sampling."
 
+"The sources of error under Phase 1 of Zhang's model are a result of the initial data
+collection and processing, and will flow through into any use of the data in the production
+of a statistical output. Phase 2 errors relate to using these source data sets to produce a
+particular statistical output. They depend on the desired outputs and the design under
+consideration. "(Reid et al. )
 
 Zhang (2012) extended, or generalised, the Total Survey Error framework so that it would be applicable to administrative datasources.  
 ![quality assessment framework phase 1 (Zhang 2012)](C:/Users/danie/OneDrive/Statistiek master/Thesis/zhang 2012 TSE phase 1.PNG)

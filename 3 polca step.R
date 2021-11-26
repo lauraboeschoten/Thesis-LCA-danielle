@@ -1,4 +1,5 @@
 #3. poLCA model (LC)
+#a latent class model is estimated for each bootstrapped sample (imputed datasets)
 
 ##NOTES ON POLCA##
 #1. if nrep > 1, then any user-specified probs.start values are only used in the first of the nrep attempts
@@ -9,7 +10,7 @@ lca_for <- cbind(Y1,Y2,Y3,Y4)~cbind(X1,X2) #cbind(predictors)~cbind(covariates)
 lca <- poLCA(formula = lca_for,simdata,nclass=4,nrep=10) #repeat 10 times for stability
 
 props_A <- prop.table(summary(as.factor(Dat_var_A$trueclass))) #proportions of each class
-check2 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), nrep = 10,data = Dat_var_A, nclass=2) 
+check2 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~cbind(COV1,COV2)), nrep = 10,data = Dat_var_A, nclass=2) 
 #from variant A with 4 classes and 5% selection and 5% classification error, 
 #the proportions of the two identified clases are 0.6 and 0.4; this is problematic... 20%is wrongfully selected ->  possible solution, strong covariates
 
@@ -20,5 +21,5 @@ check2 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), nrep = 10,data = Dat_var_A, ncla
     check2_3 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1),data = selected2, nclass=3)
 check4 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1),data = Dat_var_A, nclass=4)
 check4$P
-props_A #compare, also not very good yet
+props_A #compare, equal except for label problem!
 
