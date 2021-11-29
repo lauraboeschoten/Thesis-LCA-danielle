@@ -33,51 +33,27 @@ var_A_class1 <- Dat_var_A[which(Dat_var_A$trueclass==1),] #class 1 (houses)
 var_A_class2 <- Dat_var_A[which(Dat_var_A$trueclass==2),] #class 2
 var_A_class3 <- Dat_var_A[which(Dat_var_A$trueclass==3),] #class 3
 var_A_class4 <- Dat_var_A[which(Dat_var_A$trueclass==4),] #class 4
+list_classes <- list(var_A_class1, var_A_class2, var_A_class3, var_A_class4)
 
-#de code kan vast korten door er een functie van te maken en ook over de rijen/klassen te itereren
 
-#alles voor variabele Y1 in een matrix. met op elke row trueclass=C, en elke kolom een mogelijk antwoord.
+#alles voor variabele Y1 in een matrix. met op elke row de trueclass, en elke kolom een mogelijk antwoord.(answer i|class =c) 
 Conditionals_Y1 <- matrix(data=NA,nrow=4, ncol=4)
-#for j in (1:4){ #rows (i|Class =j)
-  for (i in 1:4){ #columns (answer i|class =j)     row 1 = class 1, iterate over answers to Y1
-  Conditionals_Y1[1,i] <- sum(var_A_class1$Y1[which(var_A_class1$Y1==i)])/sum(var_A_class1$Y1)
-  Conditionals_Y1[2,i] <- sum(var_A_class2$Y1[which(var_A_class2$Y1==i)])/sum(var_A_class2$Y1)
-  Conditionals_Y1[3,i] <- sum(var_A_class3$Y1[which(var_A_class3$Y1==i)])/sum(var_A_class3$Y1)
-  Conditionals_Y1[4,i] <- sum(var_A_class4$Y1[which(var_A_class4$Y1==i)])/sum(var_A_class4$Y1)
-  }
-Conditionals_Y1 
 Conditionals_Y2 <- matrix(data=NA,nrow=4, ncol=4)
-#for j in (1:4){ #rows (i|Class =j)
-for (i in 1:4){ #columns (answer i|class =j)     row 1 = class 1, iterate over answers to Y1
-  Conditionals_Y2[1,i] <- sum(var_A_class1$Y2[which(var_A_class1$Y2==i)])/sum(var_A_class1$Y2)
-  Conditionals_Y2[2,i] <- sum(var_A_class2$Y2[which(var_A_class2$Y2==i)])/sum(var_A_class2$Y2)
-  Conditionals_Y2[3,i] <- sum(var_A_class3$Y2[which(var_A_class3$Y2==i)])/sum(var_A_class3$Y2)
-  Conditionals_Y2[4,i] <- sum(var_A_class4$Y2[which(var_A_class4$Y2==i)])/sum(var_A_class4$Y2)
-}
-Conditionals_Y2
-
 Conditionals_Y3 <- matrix(data=NA,nrow=4, ncol=4)
-#for j in (1:4){ #rows (i|Class =j)
-for (i in 1:4){ #columns (answer i|class =j)     row 1 = class 1, iterate over answers to Y1
-  Conditionals_Y3[1,i] <- sum(var_A_class1$Y3[which(var_A_class1$Y3==i)])/sum(var_A_class1$Y3)
-  Conditionals_Y3[2,i] <- sum(var_A_class2$Y3[which(var_A_class2$Y3==i)])/sum(var_A_class2$Y3)
-  Conditionals_Y3[3,i] <- sum(var_A_class3$Y3[which(var_A_class3$Y3==i)])/sum(var_A_class3$Y3)
-  Conditionals_Y3[4,i] <- sum(var_A_class4$Y3[which(var_A_class4$Y3==i)])/sum(var_A_class4$Y3)
-}
-Conditionals_Y3
 Conditionals_Y4 <- matrix(data=NA,nrow=4, ncol=4)
-#for j in (1:4){ #rows (i|Class =j)
-for (i in 1:4){ #columns (answer i|class =j)     row 1 = class 1, iterate over answers to Y1
-  Conditionals_Y4[1,i] <- sum(var_A_class1$Y4[which(var_A_class1$Y4==i)])/sum(var_A_class1$Y4)
-  Conditionals_Y4[2,i] <- sum(var_A_class2$Y4[which(var_A_class2$Y4==i)])/sum(var_A_class2$Y4)
-  Conditionals_Y4[3,i] <- sum(var_A_class3$Y4[which(var_A_class3$Y4==i)])/sum(var_A_class3$Y4)
-  Conditionals_Y4[4,i] <- sum(var_A_class4$Y4[which(var_A_class4$Y4==i)])/sum(var_A_class4$Y4)
-}
-Conditionals_Y4
 
-        
+for (c in 1:4){ #rows, iterate over classes 
+  for (i in 1:4){ #columns, iterate over answers
+  Conditionals_Y1[c,i] <- sum(list_classes[[c]]$Y1[which(list_classes[[c]]$Y1==i)])/sum(list_classes[[c]]$Y1)
+  Conditionals_Y2[c,i] <- sum(list_classes[[c]]$Y2[which(list_classes[[c]]$Y2==i)])/sum(list_classes[[c]]$Y2)
+  Conditionals_Y3[c,i] <- sum(list_classes[[c]]$Y3[which(list_classes[[c]]$Y3==i)])/sum(list_classes[[c]]$Y3)
+  Conditionals_Y4[c,i] <- sum(list_classes[[c]]$Y4[which(list_classes[[c]]$Y4==i)])/sum(list_classes[[c]]$Y4)
+    } }
 conditionals <- list(Conditionals_Y1, Conditionals_Y2,Conditionals_Y3 ,Conditionals_Y4 )
 conditionals    #resultaten zijn opgeslagen in een list van matrices
+
+
+        
 
 #-------------------------------function to calculate the posterior probabilities-----------#
    Pclasses <- props_A 
