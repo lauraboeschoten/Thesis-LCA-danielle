@@ -80,28 +80,30 @@ conditionals <- list(Conditionals_Y1, Conditionals_Y2,Conditionals_Y3 ,Condition
 conditionals    #resultaten zijn opgeslagen in een list van matrices
 
 #-------------------------------function to calculate the posterior probabilities-----------#
-    Pclasses <- props_A 
+   Pclasses <- props_A 
     prob.y <- c()
-    prob.y.given.x <- array(NA,dim=c(Npatterns,Nclasses))
-    
-    for(i in 1:length(Dat_var_A)){ #nr of observations in dataset
+    Nobs <- 5000
+    prob.y.given.x <- array(NA,dim=c(Nobs,4))
+    responses <- Dat_var_A
+    conditionals[[1]][1,1]
+    posterior_probs <- array(NA,dim=c(Nobs,4))
+    for(i in 1:Nobs){ #nr of observations in dataset
       for(j in 1:4){ #nr of classes
-        prob.y.given.x[i,j] <- conditionals[j,(responses[i,1])]*lca$probs$Y2[j,(responses[i,2])]*lca$probs$Y3[j,(responses[i,3])]*lca$probs$Y4[j,(responses[i,4])]
+        prob.y.given.x[i,j] <- conditionals[[1]][j,(responses[i,1])]*conditionals[[2]][j,(responses[i,2])]*conditionals[[3]][j,(responses[i,3])]*conditionals[[4]][j,(responses[i,4])]
       }}
-    for(i in 1:length(Dat_var_A)){ 
+    for(i in 1:Nobs){ 
       for(j in 1:4){ #nr of classes
-        prob.y[i] <- prob.x[1]*prob.y.given.x[i,1]+prob.x[2]*prob.y.given.x[i,2]+prob.x[3]*prob.y.given.x[i,3]+prob.x[4]*prob.y.given.x[i,4]
+        prob.y[i] <- Pclasses[1]*prob.y.given.x[i,1]+Pclasses[2]*prob.y.given.x[i,2]+Pclasses[3]*prob.y.given.x[i,3]+Pclasses[4]*prob.y.given.x[i,4]
       }}
-    for(i in 1:length(Dat_var_A)){ 
+    for(i in 1:Nobs){ 
       for(j in 1:4){ #nr of classes
-        posterior_probs[i,j] <-  (prob.x[j]*prob.y.given.x[i,j])/prob.y[i]  
+        posterior_probs[i,j] <-  (Pclasses[j]*prob.y.given.x[i,j])/prob.y[i]  
       }#end loop classes
     }#end loop score patterns
     posterior_probs[1:5,]    #show first five results 
-        
-    
+ #conclusion: most cases can be quite confidently assigned to one class via modal assignment        
+     
 #notes: 
-    #deze 'functie' werkte voor een dataset met alle response patterns en de "probs" uit een polca object
     #ik zal er nog een daadwerkelijke functie (ipv reeks aan for loops) van maken
     
     #posterior_function <- function(dataset, Pclasses){}
