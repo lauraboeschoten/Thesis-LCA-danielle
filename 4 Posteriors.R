@@ -26,7 +26,6 @@ dat_sectoren$probs #voorbeeld, van dataset met 20% selection error en drie klass
 #doel: nu een probs tabel met vier klassen maken... op basis van geobserveerde score patterns en true class
 #$probs are the class-conditional outcome probabilities for the indicator variables
 
-#lca$probs$Y1[j,(responses[i,1])]*lca$probs$Y2[j,(responses[i,2])]*lca$probs$Y3[j,(responses[i,3])]*lca$probs$Y4[j,(responses[i,4])]
 #een 4 bij 4 matrix vullen met de volgende 16 proportions (en dat dan 4 keer)
     #afgaan per source (dat zijn er vier), en dan dus vier matrices met op de rijen de 4 klassen en op de kolommen de categorieën/opties
 var_A_class1 <- Dat_var_A[which(Dat_var_A$trueclass==1),] #class 1 (houses)
@@ -56,32 +55,32 @@ conditionals    #resultaten zijn opgeslagen in een list van matrices
         
 
 #-------------------------------function to calculate the posterior probabilities-----------#
-   Pclasses <- props_A 
+Pclasses <- prop.table(summary(as.factor(dataset$trueclass))) #proportions of each class
+ ssize <- 5000
+    #create storage 
+    prob.y.given.x <- array(NA,dim=c(ssize,4))
     prob.y <- c()
-    Nobs <- 5000
-    prob.y.given.x <- array(NA,dim=c(Nobs,4))
-    responses <- Dat_var_A
-    conditionals[[1]][1,1]
-    posterior_probs <- array(NA,dim=c(Nobs,4))
-    for(i in 1:Nobs){ #nr of observations in dataset
-      for(j in 1:4){ #nr of classes
-        prob.y.given.x[i,j] <- conditionals[[1]][j,(responses[i,1])]*conditionals[[2]][j,(responses[i,2])]*conditionals[[3]][j,(responses[i,3])]*conditionals[[4]][j,(responses[i,4])]
+    posterior_probs <- array(NA,dim=c(ssize,4))
+    #function to calculate posterior probabilities, P(class|scores)
+    posterior_function <- function(dataset,  ssize=5000, conditionals){
+      
+      Pclasses <- prop.table(summary(as.factor(dataset$trueclass))) #proportions of each class
+            for(i in 1:ssize){ #nr of observations in dataset
+      for(c in 1:4){ #nr of classes
+        prob.y.given.x[i,c] <- conditionals[[1]][c,(dataset[i,1])]*conditionals[[2]][c,(dataset[i,2])]*conditionals[[3]][c,(dataset[i,3])]*conditionals[[4]][c,(dataset[i,4])]
       }}
-    for(i in 1:Nobs){ 
-      for(j in 1:4){ #nr of classes
+    for(i in 1:ssize){ 
         prob.y[i] <- Pclasses[1]*prob.y.given.x[i,1]+Pclasses[2]*prob.y.given.x[i,2]+Pclasses[3]*prob.y.given.x[i,3]+Pclasses[4]*prob.y.given.x[i,4]
+      }
+    for(i in 1:ssize){ 
+      for(c in 1:4){ #nr of classes
+        posterior_probs[i,c] <-  (Pclasses[c]*prob.y.given.x[i,c])/prob.y[i]  
       }}
-    for(i in 1:Nobs){ 
-      for(j in 1:4){ #nr of classes
-        posterior_probs[i,j] <-  (Pclasses[j]*prob.y.given.x[i,j])/prob.y[i]  
-      }#end loop classes
-    }#end loop score patterns
-    posterior_probs[1:5,]    #show first five results 
- #conclusion: most cases can be quite confidently assigned to one class via modal assignment        
-     
-#notes: 
-    #ik zal er nog een daadwerkelijke functie (ipv reeks aan for loops) van maken
-    
-    #posterior_function <- function(dataset, Pclasses){}
-    #maak functie waarbij het mogelijk is dataset in te vullen (en daarmee voor elke dataset en variant de posteriors te berekenen)
-    
+      posterior_probs<<-posterior_probs #assign result to the environment (outside the function)
+      }#end function
+    posterior_function(dataset = Dat_var_A, conditionals = conditionals)
+   #show first five results 
+    posterior_probs[1:5,]
+ #conclusion: most cases in dataset A can be quite confidently assigned to one class via modal assignment        
+
+    #what would happen with larger errors?
