@@ -264,7 +264,13 @@ Dat_var_D <- df1
 head(Dat_var_D)
 summary((as.factor(Dat_var_D[,5]))) #how many per class
 
-
+#----------------------------Data patroon-------------------------------#
+dffreq <- df1[,1:4] %>% 
+  count(Y1, Y2, Y3, Y4)
+dffreq_A <- Dat_var_A[,1:4] %>% 
+  count(Y1, Y2, Y3, Y4)
+dffreq_B <- Dat_var_B[,1:4] %>% 
+  count(Y1, Y2, Y3, Y4)
 
 #-----------------------------------NOTES------------------------------------#
 #due to the replacement of 80% of the first dataset, the relations might not remain as accurate as we simulated.

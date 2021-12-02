@@ -45,6 +45,9 @@ conditionals <- list(Conditionals_Y1, Conditionals_Y2,Conditionals_Y3 ,Condition
 conditionals    #resultaten zijn opgeslagen in een list van matrices
 
 #deze drie code blokken kunnen evt in de functie erbij. en misschien kan de code nog compacter?
+
+
+
         
 
 #-------------------------------function to calculate the posterior probabilities-----------#
