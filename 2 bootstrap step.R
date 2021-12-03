@@ -3,9 +3,7 @@ cbind(head(Dat_var_A), head(Dat_var_B), head(Dat_var_C), head(Dat_var_D))
 #take m bootstrap samples from the original dataset. We use m=5 (this is sufficient, see Boeschoten (2017))
 #sample from  posterior membership probabilities
 
-install.packages("tidyverse")
 library(tidyverse)
-install.packages("confreq")
 library(confreq)
 dat <- load("simulated_dataset_RR.RData")
 summary(dat)
@@ -35,5 +33,5 @@ for (i in 5:10) { #for the original freq pattern and the five bootstrapped patte
   assign(paste0("BootstrappedData",i), data1, envir = .GlobalEnv) #store the datasets to global environment
 }
 varA_boots <- list(BootstrappedData5, BootstrappedData6, BootstrappedData7, BootstrappedData8, BootstrappedData9, BootstrappedData10)
-summary(varA_boots)
+BootstrappedData6
 save.image("bootstrap_dataset_RR.RData")

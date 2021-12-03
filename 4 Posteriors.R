@@ -5,6 +5,8 @@
       #necessary to calculate the conditional probabilities P(Yn|Class)
 #P(scorepattern)=P(Class=1)P(Y|Class)+ ... +P(Class=C)P(Y|Class=C).
 
+
+
 #datasets: 
 cbind(head(Dat_var_A), head(Dat_var_B), head(Dat_var_C), head(Dat_var_D))
 props_A <- prop.table(summary(as.factor(Dat_var_A$trueclass))) #proportions of each class
@@ -12,9 +14,9 @@ props_B <- prop.table(summary(as.factor(Dat_var_B$trueclass))) #proportions of e
 props_C <- prop.table(summary(as.factor(Dat_var_C$trueclass))) #proportions of each class
 props_D <- prop.table(summary(as.factor(Dat_var_D$trueclass))) #proportions of each class
 #deze code staat ook in de posteriorfunction
-
-dat1$probs #voorbeeld, van dataset met 20% selection error en twee klassen 
-dat_sectoren$probs #voorbeeld, van dataset met 20% selection error en drie klassen 
+cbind(props_A,props_B,props_C,props_D)
+mod1$probs #voorbeeld, van dataset met 20% selection error en twee klassen 
+mod2$probs #voorbeeld, van dataset met 20% selection error en drie klassen 
 #doel: nu een probs tabel met vier klassen maken... op basis van geobserveerde score patterns en true class
 #$probs are the class-conditional outcome probabilities for the indicator variables
 

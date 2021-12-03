@@ -8,15 +8,19 @@
 
 props_A <- prop.table(summary(as.factor(Dat_var_A$trueclass))) #proportions of each class
 check2 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~cbind(COV1,COV2)), data = Dat_var_A, nclass=2) 
-
 varA_boots <- list(BootstrappedData5, BootstrappedData6, BootstrappedData7, BootstrappedData8, BootstrappedData9, BootstrappedData10)
+predictedP <- list() #create empty list to store proportions
 for (i in 1:length(varA_boots)) {
   obj <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varA_boots[[i]], nclass=2)
-  predictedP <- list(obj$P) #problem: blijft 
-  return(obj$P)}
+  PredP <- obj$P
+  predictedP[[i]] <- PredP 
+}
+#rename , 2 klassen -> LC model op 
+  predictedP #show the proportions of each LC (with nclass=2)
+  
 obj <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varA_boots[[1]], nclass=2)
 obj$P
-#5 bootstrapped datasets, 5 LC estimates -> pool them, then 
+#5 bootstrapped datasets, 5 LC estimates, calculate posteriors and estimates, then impute and pool (and go to the next/tree step)
     #Tree-step
     df_tree2 <- cbind(Dat_var_A,check2$predclass) #dataset with 
     selected2 <-  df_tree2[which(df_tree2[,6]==2),] #make sure while selecting the cases that the right ones are selcted, check the class proportions of the results, polca does not care which one is 1 or 2
