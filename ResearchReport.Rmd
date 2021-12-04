@@ -1,0 +1,19 @@
+---
+title: "ResearchReport"
+author: "Daniëlle Remmerswaal"
+date: "3-12-2021"
+output: 
+  html_document:
+     bibliography: references.bib 
+  pdf_document:
+    citation_package: biblatex
+        
+---
+
+ class C=1
+$$ P(response pattern|X=1)=\prod_{i=1}^N P(Y_i |X=1) $$
+
+
+$$P(response pattern)= \sum^N_{i=1} P(x=i)P(response pattern|X=c)$$
+
+$$P(X=x|Y=y)= \frac{P(X=x)  P(Y=y|X=x)}{ P(Y=y)} $$
