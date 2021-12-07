@@ -69,6 +69,8 @@ Zhang (2012) extended, or generalised, the Total Survey Error framework so that 
 This framework also enables me to explain the difference between problems that can be solved with the multitrait-multimethod (MTMM) approach and with the MILC-tree method. MTMM is used for situations in survey research where multiple errors on the measurement side are studied. The MILC-tree method attempts to solve situations where there is one type of error on the measurement side (meaurement error, in our case misclassification) and one on the representation side (coverage error), as visible in the figure above called "quality assessment framework phase 1". 
 
 # 3. Methoden 
+poLCA uses EM and Newton-Raphson algorithms to maximize the latent class model log-likelihood function (Linzer and Lewis 201?).
+All considered covariates should be included in the latent class model, to avoid biased estimates of the relationship between an omitted covariate and the latent variable. 
 
 On simulation studies. "Simulation studies are computer experiments that involve creating data by pseudo-random sampling from known probability distributions. They are an invaluable tool for statistical research, particularly for the evaluation of new methods and for the comparison of alternative methods."(Morris, White and Crowther, 2018)
 ## 3.1. Analytical strategy Overview (from proposal)
