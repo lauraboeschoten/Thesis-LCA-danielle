@@ -9,51 +9,55 @@
 
 #datasets: 
 cbind(head(Dat_var_A), head(Dat_var_B), head(Dat_var_C), head(Dat_var_D))
-props_A <- prop.table(summary(as.factor(Dat_var_A$trueclass))) #proportions of each class
-props_B <- prop.table(summary(as.factor(Dat_var_B$trueclass))) #proportions of each class
-props_C <- prop.table(summary(as.factor(Dat_var_C$trueclass))) #proportions of each class
-props_D <- prop.table(summary(as.factor(Dat_var_D$trueclass))) #proportions of each class
-#deze code staat ook in de posteriorfunction
-cbind(props_A,props_B,props_C,props_D)
-mod1$probs #voorbeeld, van dataset met 20% selection error en twee klassen 
-mod2$probs #voorbeeld, van dataset met 20% selection error en drie klassen 
-#doel: nu een probs tabel met vier klassen maken... op basis van geobserveerde score patterns en true class
+obj <- 1
+(poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varA_boots[[1]], nclass=4))$P  #proportions zijn direct uit poLCA object te halen
+
+            #onnodige code
+            props_A <- prop.table(summary(as.factor(Dat_var_A$trueclass))) #proportions of each class
+            props_B <- prop.table(summary(as.factor(Dat_var_B$trueclass))) #proportions of each class
+            props_C <- prop.table(summary(as.factor(Dat_var_C$trueclass))) #proportions of each class
+            props_D <- prop.table(summary(as.factor(Dat_var_D$trueclass))) #proportions of each class
+            cbind(props_A,props_B,props_C,props_D)
+
 #$probs are the class-conditional outcome probabilities for the indicator variables
-
-#een 4 bij 4 matrix vullen met de volgende 16 proportions (en dat dan 4 keer)
-    #afgaan per source (dat zijn er vier), en dan dus vier matrices met op de rijen de 4 klassen en op de kolommen de categorieën/opties
-var_A_class1 <- Dat_var_A[which(Dat_var_A$trueclass==1),] #class 1 (houses)
-var_A_class2 <- Dat_var_A[which(Dat_var_A$trueclass==2),] #class 2
-var_A_class3 <- Dat_var_A[which(Dat_var_A$trueclass==3),] #class 3
-var_A_class4 <- Dat_var_A[which(Dat_var_A$trueclass==4),] #class 4
-list_classes <- list(var_A_class1, var_A_class2, var_A_class3, var_A_class4)
+conditionals <- (poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varA_boots[[1]], nclass=4))$probs #probabilities zijn direct uit poLCA object te halen
 
 
-#alles voor variabele Y1 in een matrix. met op elke row de trueclass, en elke kolom een mogelijk antwoord.(answer i|class =c) 
-Conditionals_Y1 <- matrix(data=NA,nrow=4, ncol=4)
-Conditionals_Y2 <- matrix(data=NA,nrow=4, ncol=4)
-Conditionals_Y3 <- matrix(data=NA,nrow=4, ncol=4)
-Conditionals_Y4 <- matrix(data=NA,nrow=4, ncol=4)
-
-#two for loops to create four 4x4 matrices 
-for (c in 1:4){ #rows, iterate over classes 
-  for (i in 1:4){ #columns, iterate over answers
-  Conditionals_Y1[c,i] <- sum(list_classes[[c]]$Y1[which(list_classes[[c]]$Y1==i)])/sum(list_classes[[c]]$Y1)
-  Conditionals_Y2[c,i] <- sum(list_classes[[c]]$Y2[which(list_classes[[c]]$Y2==i)])/sum(list_classes[[c]]$Y2)
-  Conditionals_Y3[c,i] <- sum(list_classes[[c]]$Y3[which(list_classes[[c]]$Y3==i)])/sum(list_classes[[c]]$Y3)
-  Conditionals_Y4[c,i] <- sum(list_classes[[c]]$Y4[which(list_classes[[c]]$Y4==i)])/sum(list_classes[[c]]$Y4)
-    } }
-conditionals <- list(Conditionals_Y1, Conditionals_Y2,Conditionals_Y3 ,Conditionals_Y4 )
-conditionals    #resultaten zijn opgeslagen in een list van matrices
-
-#deze drie code blokken kunnen evt in de functie erbij. en misschien kan de code nog compacter?
+#onnodige code:
+              #een 4 bij 4 matrix vullen met de volgende 16 proportions (en dat dan 4 keer)
+                  #afgaan per source (dat zijn er vier), en dan dus vier matrices met op de rijen de 4 klassen en op de kolommen de categorieën/opties
+              var_A_class1 <- Dat_var_A[which(Dat_var_A$trueclass==1),] #class 1 (houses)
+              var_A_class2 <- Dat_var_A[which(Dat_var_A$trueclass==2),] #class 2
+              var_A_class3 <- Dat_var_A[which(Dat_var_A$trueclass==3),] #class 3
+              var_A_class4 <- Dat_var_A[which(Dat_var_A$trueclass==4),] #class 4
+              list_classes <- list(var_A_class1, var_A_class2, var_A_class3, var_A_class4)
+              
+              
+              #alles voor variabele Y1 in een matrix. met op elke row de trueclass, en elke kolom een mogelijk antwoord.(answer i|class =c) 
+              Conditionals_Y1 <- matrix(data=NA,nrow=4, ncol=4)
+              Conditionals_Y2 <- matrix(data=NA,nrow=4, ncol=4)
+              Conditionals_Y3 <- matrix(data=NA,nrow=4, ncol=4)
+              Conditionals_Y4 <- matrix(data=NA,nrow=4, ncol=4)
+              
+              #two for loops to create four 4x4 matrices 
+              for (c in 1:4){ #rows, iterate over classes 
+                for (i in 1:4){ #columns, iterate over answers
+                Conditionals_Y1[c,i] <- sum(list_classes[[c]]$Y1[which(list_classes[[c]]$Y1==i)])/sum(list_classes[[c]]$Y1)
+                Conditionals_Y2[c,i] <- sum(list_classes[[c]]$Y2[which(list_classes[[c]]$Y2==i)])/sum(list_classes[[c]]$Y2)
+                Conditionals_Y3[c,i] <- sum(list_classes[[c]]$Y3[which(list_classes[[c]]$Y3==i)])/sum(list_classes[[c]]$Y3)
+                Conditionals_Y4[c,i] <- sum(list_classes[[c]]$Y4[which(list_classes[[c]]$Y4==i)])/sum(list_classes[[c]]$Y4)
+                  } }
+              conditionals <- list(Conditionals_Y1, Conditionals_Y2,Conditionals_Y3 ,Conditionals_Y4 )
+              conditionals    #resultaten zijn opgeslagen in een list van matrices
+              
 
 
 
         
 
 #-------------------------------function to calculate the posterior probabilities-----------#
-Pclasses <- prop.table(summary(as.factor(dataset$trueclass))) #proportions of each class
+Pclasses <- (poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varA_boots[[1]], nclass=4))$P  #proportions zijn direct uit poLCA object te halen
+
  ssize <- 5000
     #create storage 
     prob.y.given.x <- array(NA,dim=c(ssize,4))
