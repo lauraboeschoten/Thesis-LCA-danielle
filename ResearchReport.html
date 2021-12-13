@@ -57,6 +57,28 @@ if (window.hljs) {
 
 
 
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
 
 
 
@@ -170,11 +192,98 @@ pre code {
 
 </div>
 
+<div id="TOC">
+<ul>
+<li><a href="#methods">2. Methods</a>
+<ul>
+<li><a href="#milc">2.1. MILC</a>
+<ul>
+<li><a href="#bootstrap">2.1.1. Bootstrap</a></li>
+<li><a href="#lc">2.1.2.LC</a></li>
+<li><a href="#posterior-membership-probabilities">2.1.3. Posterior membership probabilities</a></li>
+<li><a href="#multiple-imputation-mi">2.1.4. Multiple Imputation (MI)</a></li>
+<li><a href="#calculation-of-estimates">2.1.5. Calculation of estimates</a></li>
+<li><a href="#pooling-of-estimates">2.1.6. Pooling of estimates</a></li>
+</ul></li>
+<li><a href="#tree-milc">2. Tree-MILC</a>
+<ul>
+<li><a href="#first-phase-of-tree-milc">2.2.1. First phase of tree-MILC</a></li>
+<li><a href="#second-phase-of-tree-milc">2.2.1. Second phase of tree-MILC</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
 
-<p><span class="citation">@Boeschoten2017 [@Cernat2018]</span></p>
+<style>
+body {
+text-align: justify}
+</style>
+<div id="methods" class="section level1">
+<h1>2. Methods</h1>
+<div id="milc" class="section level2">
+<h2>2.1. MILC</h2>
+<p>The MILC method, developed by <span class="citation">Boeschoten et al. (2019)</span>, is a combination of latent class (LC) analysis and multiple imputation (MI), and is used to identify and correct classification errors. The typical use of latent variable models is for analysing multivariate response data. In contrast, the LC model in MILC is used to estimate the “true” category of units in combined datasets, that consist of multiple unit-linked categorical variables from different sources measuring the same attribute. Here, an overview of the six MILC steps is given and visualised in figure 1. In the next sections, each step will be explained more elaborately. * m bootstrap samples are taken with replacement from a dataset with multiple variables. With m being equal to the number of imputations (see step 4). * We apply a LC model with C classes on each of those m bootstrap samples. With C being equal to the number of categories of the variable of interest. * We calculate the posterior membership probabilities for each of the m LC models * By sampling from the obtained posteriors we create m imputations of the latent class and store them in a dataset with the original variables. * Calculate the estimate of interest for each of the m imputations * Pool the m estimates with Rubin’s pooling rules</p>
+<div id="bootstrap" class="section level3">
+<h3>2.1.1. Bootstrap</h3>
+<p>To reflect uncertainty caused by classification errors of the data in the m imputations, we create m bootstrap samples from our original dataset. The dataset consists of multiple unit-linked categorical variables from different sources measuring the same attribute. We use a multinomial distribution to sample from, with the frequencies of each response pattern as probabilities. This step results in m bootstrap samples of the same size as the original dataset.</p>
+</div>
+<div id="lc" class="section level3">
+<h3>2.1.2.LC</h3>
+<p>On each of the m bootstrap samples we apply an LC model. The basic idea behind latent class analysis (LCA) is to find latent variables based on the correlation structure of observed categorical “indicator” variables. Each of the J categorical variables has Kj possible outcomes for individuals i=1,,N. In our specific case each source measures the same attribute and has the same number of categories, so Kj = K. Each individual has a response on each of the J variables Y_j (j=1,,J); there is no missing data. The vector of responses Y for one individual is called a response pattern. There are _{j=1}^{J}K_j , and in our case K^J, possible response patterns. In general, the number of latent classes is not known and has to be determined by the user of the LC model. When an LC model is used for correction of classification errors and all sources have the same number of categories, K_j=C for all j=1,,J, and the number of latent classes is also fixed to C. Most LC models make use of modal assignment: an individual is assigned to the class for which he has the highest membership likelihood based on his response pattern on the indicator variables. Without classification errors, all sources would contain the correct category and all individuals would be assigned to the class to which they belong. In MILC, modal assignment is not used. Instead, values are assigned to the latent class by drawing from the posterior membership distribution (see below).</p>
+<p>The two key model assumptions for latent class analysis are the local independence assumption and the mixture assumption. By assuming that responses within one class are independent of each other, we assume the correlation between them was solely caused by their class membership. With this assumption we can calculate the likelihood of a response pattern Y (combination of responses on the indicator variables) occurring given the observation is part of class c. </p>
+<p>P(|X=c)=_{j=1}^{J}P(Y_j|X=c) (1) By assuming that the probability of obtaining a specific response pattern is the weighted sum of all C class-specific conditional response probabilities (mixture assumption) we can calculate the probability density function of a response pattern Y across all classes.</p>
+<p>P()=_{c=1}^{C}P(X=c)P(|X=c) (2)</p>
 <p>class C=1 <span class="math display">\[ P(response pattern|X=1)=\prod_{i=1}^N P(Y_i |X=1) \]</span></p>
 <p><span class="math display">\[P(response pattern)= \sum^N_{i=1} P(x=i)P(response pattern|X=c)\]</span></p>
+</div>
+<div id="posterior-membership-probabilities" class="section level3">
+<h3>2.1.3. Posterior membership probabilities</h3>
+<p>By combining the mixture and local independence assumption and using Bayes’ rule, we are able to calculate the posterior membership probabilities of each response pattern, and thus for each individual.<br />
+P(X=c|=)= (3)</p>
+<p>The posterior membership probabilities of a response pattern for each class sums to one. _{c=1}^{C}P(X=c|=)=1</p>
 <p><span class="math display">\[P(X=x|Y=y)= \frac{P(X=x)  P(Y=y|X=x)}{ P(Y=y)} \]</span></p>
+</div>
+<div id="multiple-imputation-mi" class="section level3">
+<h3>2.1.4. Multiple Imputation (MI)</h3>
+<p>There are numerous methods for multiple imputation. Since we are not imputing a small proportion of missing categorical values, but the entire dataset, methods like imputing the mode are inappropriate. One other possible method is logistic regression based on auxiliary variables, but this is not applicable to the type of data we have. We use the posteriors, as calculated in the previous step, to impute the assign the classes to the individuals. The most straightforward method to impute the classes with the posteriors is modal assignment, which is used by the R package poLCA. Here, individuals are assigned to the class with the highest posterior membership probability. We use the posteriors as probabilities and assign individuals to a class by sampling from the posterior membership probabilities. We impute m variables based on the posteriors of each of the m bootstrapped samples. Five imputations are sufficient, as demonstrated by <span class="citation">Boeschoten et al. (2019)</span>.</p>
+</div>
+<div id="calculation-of-estimates" class="section level3">
+<h3>2.1.5. Calculation of estimates</h3>
+<p>We are interested in the proportions of the class sizes. … Frequencies of the classes.</p>
+</div>
+<div id="pooling-of-estimates" class="section level3">
+<h3>2.1.6. Pooling of estimates</h3>
+<p>We pool the estimates of the imputations with Rubin’s pooling rules. (not adjusted, because in our data simulation with polca we sample with replacement)</p>
+</div>
+</div>
+<div id="tree-milc" class="section level2">
+<h2>2. Tree-MILC</h2>
+<p>Tree-MILC is potentially a useful method to distinguish the different (selection and classification) errors in the dataset, and obtain the correct estimates. The idea of implementing a tree-step originates from latent class tree (LCT) analysis, as developed by <span class="citation">Bergh et al. (2018)</span>. In LCT analysis, the data is split and structured into classes by method of a sequential comparison of 1- and 2-class models. The top-down approach continues until the information criterion (e.g. BIC) no longer chooses 2-class models over 1-class models. The splits are performed based on the posterior class membership probabilities of each new class (child nodes) conditional on the class before the splitting (parent node). The main advantage of this method of latent class analysis is that it provides clear insight in splitting of the classes, the structure of the data, and how models with different number of classes are related to each other. The same steps as for MILC are followed, twice, with the LC model in the second phase being applied on a subset of the data. Subsequently, the two LC models extract a different number of classes, as will be elaborated on later. The process is visualised in figure 2.</p>
+<p>Option 1: in step 4 we place the imputations next to the original dataset. In the second phase we continue with the subset of the original dataset based on the imputations (we delete the wrongfully selected units). Since we continue with a subset of the original dataset we have to bootstrap again to incorporate uncertainty due to classification errors.<br />
+Option 2: in step 4 we place the imputations next to the corresponding bootstrap sample. We continue with the a subset of each bootstrap sample based on the corresponding imputations (we delete the wrongfully selected units). Since we are still working with the bootstraps the uncertainty due to classification errors is still reflected and we do not have to bootstrap again.</p>
+<div id="first-phase-of-tree-milc" class="section level3">
+<h3>2.2.1. First phase of tree-MILC</h3>
+<p>We apply a LC model with S classes on each of those m bootstrapped samples. S = 2 when we have units that should be either selected or not. Now we select the cases we are interested in and delete the cases with selection errors from our pooled imputed dataset Step 4: combine with subset of original data? Of gewoon met de bootstrap samples? Dan kunnen we gelijk door. (zie option 1 en 2 hierboven)</p>
+</div>
+<div id="second-phase-of-tree-milc" class="section level3">
+<h3>2.2.1. Second phase of tree-MILC</h3>
+<p>with the subset of selected cases? M bootstrap samples are taken with replacement from the dataset. (this step is possibly unnecessary) We apply a LC model with C classes on each of those m bootstrapped samples. With C being the categories prone to classification error.</p>
+</div>
+</div>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p></p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-van_den_bergh_building_2018" class="csl-entry">
+Bergh, M. van den and Vermunt, J. K., Building Latent Class Growth Trees, <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, vol. <strong>25</strong>, no. 3, pp. 331–42, accessed September 15, 2021, from <a href="https://www.tandfonline.com/doi/full/10.1080/10705511.2017.1389610">https://www.tandfonline.com/doi/full/10.1080/10705511.2017.1389610</a>, May 4, 2018. DOI: <a href="https://doi.org/10.1080/10705511.2017.1389610">10.1080/10705511.2017.1389610</a>
+</div>
+<div id="ref-boeschoten_estimating_2019" class="csl-entry">
+Boeschoten, L., Waal, T. and Vermunt, J. K., Estimating the Number of Serious Road Injuries Per Vehicle Type in the Netherlands by Using Multiple Imputation of Latent Classes, <em>Journal of the Royal Statistical Society: Series A (Statistics in Society)</em>, vol. <strong>182</strong>, no. 4, pp. 1463–86, accessed September 15, 2021, from <a href="https://onlinelibrary.wiley.com/doi/10.1111/rssa.12471">https://onlinelibrary.wiley.com/doi/10.1111/rssa.12471</a>, October 2019. DOI: <a href="https://doi.org/10.1111/rssa.12471">10.1111/rssa.12471</a>
+</div>
+</div>
+</div>
 
 
 

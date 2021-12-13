@@ -79,8 +79,13 @@ Pclasses <- (poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varA_boots[[1]], nclas
       }}
       posterior_probs<<-posterior_probs #assign result to the environment (to be able to access outside the function)
       }#end function
-    posterior_function(dataset = Dat_var_A, conditionals = conditionals)
+    posterior_function(dataset = Dat_var_D, conditionals = probs_D[[1]])
    #show first five results 
     posterior_probs[1:5,]
  #conclusion: most cases in dataset A can be quite confidently assigned to one class via modal assignment        
 
+    posteriors_D <- list()
+    for (m in 1:5) {
+      posteriors_D [[m]]<- posterior_function(dataset = Dat_var_D, conditionals = probs_D[[m]])
+        }
+posteriors_D[[1]]    

@@ -12,7 +12,7 @@ set.seed(123)
 dffreq <- df1[,1:4] %>% 
   count(Y1, Y2, Y3, Y4)
 
-dffreq <- Dat_var_A[,1:4] %>% 
+dffreq <- Dat_var_D[,1:4] %>% 
   count(Y1, Y2, Y3, Y4)
 
 #create nboot bootstrap samples
@@ -30,8 +30,8 @@ dfboot
 256*4 #four classes so 1024 different posterior membership probabilities 
 for (i in 5:10) { #for the original freq pattern and the five bootstrapped patterns
   data1 <- as.data.frame(confreq::fre2dat(dfboot[,c(1:4, i)])) #converge frequency table to dataframe
-  assign(paste0("BootstrappedData",i), data1, envir = .GlobalEnv) #store the datasets to global environment
+  assign(paste0("BootstrappedData",(i-4)), data1, envir = .GlobalEnv) #store the datasets to global environment
 }
-varA_boots <- list(BootstrappedData5, BootstrappedData6, BootstrappedData7, BootstrappedData8, BootstrappedData9, BootstrappedData10)
+varD_boots <- list(BootstrappedData1, BootstrappedData2, BootstrappedData3, BootstrappedData4, BootstrappedData5, BootstrappedData6)
 BootstrappedData6
 save.image("bootstrap_dataset_RR.RData")

@@ -10,13 +10,19 @@ props_A <- prop.table(summary(as.factor(Dat_var_A$trueclass))) #proportions of e
 check2 <- poLCA(formula=(cbind(Y1,Y2+Y3+Y4)~cbind(COV1,COV2)), data = Dat_var_A, nclass=2) 
 varA_boots <- list(BootstrappedData5, BootstrappedData6, BootstrappedData7, BootstrappedData8, BootstrappedData9, BootstrappedData10)
 predictedP <- list() #create empty list to store proportions
-for (i in 1:length(varA_boots)) {
-  obj <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varA_boots[[i]], nclass=4)
+lcas <- list()
+probs_D <- list()
+varD_boots <- list(BootstrappedData5, BootstrappedData6, BootstrappedData7, BootstrappedData8, BootstrappedData9, BootstrappedData10)
+for (i in 1:length(varD_boots)) {
+  obj <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varD_boots[[i]], nclass=4)
   PredP <- obj$P
+  lcas[[i]] <- obj
+  probs_D[[i]] <- obj$probs
   predictedP[[i]] <- PredP 
 }
+lcas[[1]]$probs
 #rename , 2 klassen -> LC model  toepassen op y1&y2 (hoe )
-  predictedP[[1]] #show the proportions of each LC (with nclass=2)
+  predictedP[[1]] #show the proportions of each LC (with nclass=4) with MODAL ASSIGNMENT
   
 obj <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = varA_boots[[1]], nclass=4)
 obj$P

@@ -3,12 +3,16 @@ title: "Draft Research Report"
 author: "Daniëlle Remmerswaal"
 date: "15-11-2021"
 output:
-  word_document: 
-    toc: true
+  pdf_document:
+    toc: yes
+  word_document:
+    toc: yes
+bibliography: MyfilesThesis.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tinytex)
 ```
 
 
