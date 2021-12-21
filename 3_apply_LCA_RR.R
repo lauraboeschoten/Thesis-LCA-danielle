@@ -1,6 +1,9 @@
 library(poLCA)
+library(tidyverse)
 
 load("bootstrap_dataset_RR.RData")
+
+set.seed(123)
 
 # Go to long format
 longdat = list(NA)
@@ -26,6 +29,7 @@ for(i in 1:nboot){
               nrep = 10)
 }
 
+save.image("LCAS_RR.RData")
 
   # stappn voor tree step (moeten in aparte scripts): 
   # eerst de dataset weer terugbrengen naar de 2 selectie klassen
