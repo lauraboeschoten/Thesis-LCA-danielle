@@ -31,6 +31,14 @@ for (i in 1:length(boots_5)) {
 LCAS[[1]]$probs
 LCAS[[1]]$probs$Y1
 LCAS[[1]]$probs$Y1[1,]
+LCAS[[2]]$probs$Y1[1,]
+LCAS[[1]]$probs$Y1
+LCAS[[1]]$probs$Y2
+LCAS[[1]]$probs$Y3
+LCAS[[1]]$probs$Y4
+#we aSsume consistence over indicators. it works. now.
+
+
 
 order = c(which.max(LCAS[[1]]$probs$Y1[1,]), 
           which.max(LCAS[[1]]$probs$Y1[2,]),
@@ -51,8 +59,8 @@ LCAS2_probs
 
 
 
-order(LCAS[[1]]$P)
-sort(LCAS[[1]]$P)
+order(LCAS[[1]]$P, decreasing=T)
+sort(LCAS[[1]]$P, decreasing = T)
 
 #what do we need? class 1 means the same class in each of the datasets 
 #try with general probs
