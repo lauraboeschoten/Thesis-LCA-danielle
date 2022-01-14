@@ -19,7 +19,7 @@ meas_5 <- list(matrix(c(0.95, 0.025, 0.025, 0.025, 0.95, 0.025, 0.025, 0.025, 0.
 mod1 <- poLCA.simdata(N       = 5000,
                       nclass  = 2,
                       probs   = select_5, 
-                      P       = c(0.2, 0.8), 
+                      P       = c(0.1, 0.9), 
                       missval = F)
 
 # simulated dataset selection part
@@ -30,7 +30,7 @@ df1 <- cbind(mod1$dat,
 mod2 <- poLCA.simdata(N       = 5000, 
                       nclass  = 3,
                       probs   = meas_5,
-                      P       = c(0.4,0.35,0.25),
+                      P       = c(1/3,1/3,1/3),
                       missval = F)
 
 # simulated dataset measurement part
