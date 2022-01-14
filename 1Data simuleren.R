@@ -4,16 +4,16 @@ options(scipen = 999) # remove scientific notation
 set.seed(123) #set.seed for replicability
 
 #5% selection error
-select_5 <-  list(matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T),
+select_5 <-           list(matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T),
                            matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T),
                            matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T),
-                           matrix(c(0.05, 0.95,     0.95, 0.05), ncol=2, byrow=T))
+                           matrix(c(0.95, 0.05,     0.05, 0.95), ncol=2, byrow=T))
 
 #20% selection error
 select_20 <- list(matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T),
                matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T),
                matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T),
-               matrix(c(0.2, 0.8,     0.8, 0.2), ncol=2, byrow=T))
+               matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T))
 
 
 #5% classification error
@@ -21,40 +21,26 @@ select_20 <- list(matrix(c(0.8, 0.2,     0.2, 0.8), ncol=2, byrow=T),
 meas_5 <- list(matrix(c(0.95,0.025,0.025,    0.025,0.95,0.025,    0.025,0.025,0.95 ), ncol=3, byrow=TRUE), # Y1
                matrix(c(0.95,0.025,0.025,    0.025,0.95,0.025,    0.025,0.025,0.95 ), ncol=3, byrow=TRUE), # Y2
                matrix(c(0.95,0.025,0.025,    0.025,0.95,0.025,    0.025,0.025,0.95 ), ncol=3, byrow=TRUE), #Y3
-               matrix(c(0.025,0.025,0.95,    0.025,0.95,0.025,    0.95,0.025,0.025 ), ncol=3, byrow=TRUE)) #Y4
+               matrix(c(0.95,0.025,0.025,    0.025,0.95,0.025,    0.025,0.025,0.95 ), ncol=3, byrow=TRUE)) #Y4
 
 #20% classification error
 
 meas_20 <- list(matrix(c(0.8,0.1,0.1,    0.1,0.8,0.1,     0.1,0.1,0.8 ), ncol=3,   byrow=TRUE), # Y1
                matrix(c(0.8,0.1,0.1,    0.1,0.8,0.1,     0.1,0.1,0.8 ), ncol=3, byrow=TRUE), # Y2
                matrix(c(0.80,0.1,0.1,   0.1,0.8,0.1,     0.1,0.1,0.8 ), ncol=3, byrow=TRUE), #Y3
-               matrix(c(0.1,0.1,0.80,   0.1,0.8,0.1,     0.80,0.1,0.1 ), ncol=3, byrow=TRUE)) #Y4
+               matrix(c(0.80,0.1,0.1,   0.1,0.8,0.1,     0.1,0.1,0.8  ), ncol=3, byrow=TRUE)) #Y4
 
-#--------------------------COVARIATES----------------------------------#
+select_errors <- list(select_5, select_20)
+meas_errors <- list(meas_5, meas_20)
 
-#each row is for a latent class, and the number of columns is the nr of responses 
-#covariate with ... strong relation with ...
-#ncol = nr of categories of covariate 
-#nrow = ??
-#how many rows are needed?
+#--------------------------FUNCTION----------------------------------#
 
-matrix(c(0.3, 0.7,
-         0.7, 0.3), ncol=2, byrow=T) # (For selection error part)
+mod1 <- poLCA.simdata(N=5000,nclass=2,probs= select_5, P= c(0.2,0.8), missval = F) #poLCA simdata selection error part, 2 classes
+df1 <- cbind(mod1$dat,trueclass=mod1$trueclass) #simulated dataset selection 
+mod2 <- poLCA.simdata(N=5000, P=(c(0.4,0.35,0.25)), probs=meas_5) 
+df2 <- cbind(mod2$dat[,1:4]+1, sectors=mod2$trueclass+1) #+1 to avoid overlap classes 
 
-matrix(c(0.3, 0.7, 
-         0.7, 0.3,
-         0.3, 0.7), ncol=2, byrow=T) # (For classification error part)
 
-#covariate with ... equal relations
-matrix(c(0.5, 0.5,
-         0.5, 0.5), ncol=2, byrow=T) # (For selection error part)
-
-matrix(c((1/3), (1/3), (1/3),
-         (1/3), (1/3), (1/3)), ncol=2, byrow=T)  # (For classification error part)
-
-#note: one covariate will be correlated with selection, and one with classification error.
-#-> relations might not remain as accurate as we simulated
-#alternative: specify relation t.o.v. true class in final dataset 
 
 #--------------------------VARIANTS----------------------------------#
 
@@ -240,4 +226,5 @@ dffreq_B <- Dat_var_B[,1:4] %>%
 #-----------------------------------NOTES------------------------------------#
 #due to the replacement of 80% of the first dataset, the relations might not remain as accurate as we simulated.
 #-> we can see this in the calculation of the posteriors since we have to calculate the $probs of the combined dataset
+
 
