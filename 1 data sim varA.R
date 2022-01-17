@@ -44,4 +44,8 @@ for(i in 1:ncol(df1)){
   df1[,i][to_replace] <- df2[,i][to_replace]
 }
 
+head(df1)
+try2 <- poLCA(formula=(cbind(Y1,Y2,Y3,Y4)~1), data = df1, nclass=4, nrep=1)
+try2$P
 save.image("simulated_dataset_RR.RData")
+

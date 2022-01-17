@@ -19,7 +19,7 @@ for(i in 1:nboot){
   # temporarily create a short dataset per bootstrap sample
   datforslice = dfboot[,c(1:4,i+5)]
   colnames(datforslice) = c("Y1","Y2","Y3","Y4","Freq")
-  # use this as imput for the slice function
+  # use this as input for the slice function
   longdat[[i]] = datforslice %>% 
     slice(rep(1:n(), Freq)) %>%  
     select(c("Y1","Y2","Y3","Y4"))
@@ -32,10 +32,12 @@ for(i in 1:nboot){
   
   # now solve label switching issue
   ## first get the order of the classes of Y1 (assume consistence over indicators)
-  order = c(which.max(LCAS[[i]]$probs$Y1[1,]),
-            which.max(LCAS[[i]]$probs$Y1[2,]),
-            which.max(LCAS[[i]]$probs$Y1[3,]),
-            which.max(LCAS[[i]]$probs$Y1[4,]))
+#caution: unsure if this works for errors of high percentages
+  order = c(which.max(LCAS[[i]]$probs$Y1[,1]), #class for which column 1 has the highest prob
+            which.max(LCAS[[i]]$probs$Y1[,2]), # "    column 2  "
+            which.max(LCAS[[i]]$probs$Y1[,3]),
+            which.max(LCAS[[i]]$probs$Y1[,4]))
+#now we have the order 
   
   ## store LC output under a new name
   LCAS2[[i]] = LCAS[[i]]
@@ -52,12 +54,17 @@ for(i in 1:nboot){
 #TEST
 LCAS_probs <- list(NA)
 for (i in 1:5) {
-  LCAS_probs[[i]] <-   LCAS2[[i]]$P
+  LCAS_probs[[i]] <-   LCAS[[i]]$P
 }
 LCAS_probs 
-#LET OP! het label probleem is nog niet opgelost
+LCAS_probs2 <- list(NA)
+for (i in 1:5) {
+  LCAS_probs2[[i]] <-   LCAS2[[i]]$P
+}
+LCAS_probs2 
+LCAS2[[3]]$probs
 
-
+#label switching worked! the classes are now consistently labelled over the boostrap samples
 
 save.image("LCAS_RR.RData")
 
