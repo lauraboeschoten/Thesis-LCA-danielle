@@ -166,3 +166,11 @@ for(b in 1:5){
 }
 imps_A
 
+
+#-------------------------------6. Results-----------#
+
+
+MILC_P <- prop.table(table(imp1))
+true_P <- LCAS2_probs[[1]]
+MILC_P-true_P 
+
