@@ -36,7 +36,7 @@ df1 <- cbind(mod1$dat,
 mod2 <- poLCA.simdata(N       = 5000, 
                       nclass  = 3,
                       probs   = meas_5,
-                      P       = c(0.4,0.35,0.20),
+                      P       = c(0.4,0.32,0.28),
                       missval = F)
 
 # simulated dataset measurement part
