@@ -88,26 +88,26 @@ LCAS2_probs <- list(NA)
 set.seed(123)
 for (i in 1:5) {
   #create dataset per bootstrap sample with the following code:
-    bootdata[[i]] <- as.data.frame(confreq::fre2dat(dfboot[,c(1:4, (i+5))])) #converge frequency table to dataframe
-#run LC model on each bootstrap sample
+  bootdata[[i]] <- as.data.frame(confreq::fre2dat(dfboot[,c(1:4, (i+5))])) #converge frequency table to dataframe
+  #run LC model on each bootstrap sample
   LCAS[[i]] = poLCA(formula = cbind(Y1, Y2, Y3, Y4) ~ 1,  
-              bootdata[[i]],       nclass = 4,      nrep = 10)
+                    bootdata[[i]],       nclass = 4,      nrep = 10)
   LCAS_probs[[i]] <-   LCAS[[i]]$P #display proportions per class, for each bootstrap sample (conclusion: we have a label switching problem)
-#column maxima switched label detection algorithm (for each column/response we want to find which class has the highest likelihood)
-order = c(which.max(LCAS[[i]]$probs$Y1[,1]), #class for which column 1 has the highest probability
-          which.max(LCAS[[i]]$probs$Y1[,2]), # "    column 2  "
-          which.max(LCAS[[i]]$probs$Y1[,3]),
-          which.max(LCAS[[i]]$probs$Y1[,4]))
-
-LCAS2[[i]] <- LCAS[[i]] #assign values to new object. Next, change the order of the classes
-LCAS2[[i]]$probs$Y1 = LCAS[[i]]$probs$Y1[,c(as.numeric(paste(order)))]
-LCAS2[[i]]$probs$Y2 = LCAS[[i]]$probs$Y2[,c(as.numeric(paste(order)))]
-LCAS2[[i]]$probs$Y3 = LCAS[[i]]$probs$Y3[,c(as.numeric(paste(order)))]
-LCAS2[[i]]$probs$Y4 = LCAS[[i]]$probs$Y4[,c(as.numeric(paste(order)))]
-LCAS2[[i]]$P        = LCAS[[i]]$P[c(as.numeric(paste(order)))]
-# WARNING: other elements in the LC output are not switched!! 
-LCAS2_probs[[i]] <-   LCAS2[[i]]$P #results, to check if label detection algorithm worked
-  }
+  #column maxima switched label detection algorithm (for each column/response we want to find which class has the highest likelihood)
+  order = c(which.max(LCAS[[i]]$probs$Y1[,1]), #class for which column 1 has the highest probability
+            which.max(LCAS[[i]]$probs$Y1[,2]), # "    column 2  "
+            which.max(LCAS[[i]]$probs$Y1[,3]),
+            which.max(LCAS[[i]]$probs$Y1[,4]))
+  
+  LCAS2[[i]] <- LCAS[[i]] #assign values to new object. Next, change the order of the classes
+  LCAS2[[i]]$probs$Y1 = LCAS[[i]]$probs$Y1[,c(as.numeric(paste(order)))]
+  LCAS2[[i]]$probs$Y2 = LCAS[[i]]$probs$Y2[,c(as.numeric(paste(order)))]
+  LCAS2[[i]]$probs$Y3 = LCAS[[i]]$probs$Y3[,c(as.numeric(paste(order)))]
+  LCAS2[[i]]$probs$Y4 = LCAS[[i]]$probs$Y4[,c(as.numeric(paste(order)))]
+  LCAS2[[i]]$P        = LCAS[[i]]$P[c(as.numeric(paste(order)))]
+  # WARNING: other elements in the LC output are not switched!! 
+  LCAS2_probs[[i]] <-   LCAS2[[i]]$P #results, to check if label detection algorithm worked
+}
 
 LCAS_probs #old P's with switched labels
 LCAS2_probs #relabelled P's 
@@ -117,7 +117,7 @@ LCAS2_probs #relabelled P's
 
 # create empty columns to store calculated posteriors
 df1[,c("p1","p2","p3","p4","imp", "imp2")] <- NA 
-    #MY FUNCTION TO CALCULATE POSTERIORS
+#MY FUNCTION TO CALCULATE POSTERIORS
 #to do: *connect to df1 and add column names
 #       *add imputation
 ssize=5000
@@ -126,34 +126,34 @@ prob.y.given.x <- array(NA,dim=c(ssize,4))
 prob.y <- c()
 posterior_probs <- array(NA,dim=c(ssize,4))
 posterior_function <- function(dataset,  ssize=5000, conditionals, Pclasses){ #need to provide a dataset and the conditional probabilities, P(score|class). Default samplesize is set to 5000
-    for(i in 1:ssize){ #nr of observations in dataset
-      for(c in 1:4){ #nr of classes
-          prob.y.given.x[i,c] <- conditionals[[1]][c,(dataset[i,1])]*conditionals[[2]][c,(dataset[i,2])]*conditionals[[3]][c,(dataset[i,3])]*conditionals[[4]][c,(dataset[i,4])]
-        }}
-    for(i in 1:ssize){ 
-        prob.y[i] <- Pclasses[1]*prob.y.given.x[i,1]+Pclasses[2]*prob.y.given.x[i,2]+Pclasses[3]*prob.y.given.x[i,3]+Pclasses[4]*prob.y.given.x[i,4]
-      }
-    for(i in 1:ssize){ 
-      for(c in 1:4){ #nr of classes
-        posterior_probs[i,c] <-  (Pclasses[c]*prob.y.given.x[i,c])/prob.y[i]  
-        }}
-      posterior_probs<<-posterior_probs #assign result to the environment (to be able to access outside the function)
-      colnames(posterior_probs) <- c("p1", "p2", "p3", "p4")
-    }#end function
+  for(i in 1:ssize){ #nr of observations in dataset
+    for(c in 1:4){ #nr of classes
+      prob.y.given.x[i,c] <- conditionals[[1]][c,(dataset[i,1])]*conditionals[[2]][c,(dataset[i,2])]*conditionals[[3]][c,(dataset[i,3])]*conditionals[[4]][c,(dataset[i,4])]
+    }}
+  for(i in 1:ssize){ 
+    prob.y[i] <- Pclasses[1]*prob.y.given.x[i,1]+Pclasses[2]*prob.y.given.x[i,2]+Pclasses[3]*prob.y.given.x[i,3]+Pclasses[4]*prob.y.given.x[i,4]
+  }
+  for(i in 1:ssize){ 
+    for(c in 1:4){ #nr of classes
+      posterior_probs[i,c] <-  (Pclasses[c]*prob.y.given.x[i,c])/prob.y[i]  
+    }}
+  posterior_probs<<-posterior_probs #assign result to the environment (to be able to access outside the function)
+  colnames(posterior_probs) <- c("p1", "p2", "p3", "p4")
+}#end function
 
 #Results
 implist = list(NA) #store results
-  for(m in 1:nboot){ #for each bootstrap sample
-      implist[[m]] <- df1
-      implist[[m]][,(6:9)] <-  posterior_function(dataset = bootdata[[m]], conditionals = LCAS2[[m]]$probs, Pclasses = LCAS2_probs[[m]])
-      for (i in 1:ssize) {
-        implist[[m]][i,"imp"] = which(rmultinom(1, 1, implist[[m]][i,c("p1","p2","p3","p4")]) == 1)
-        implist[[m]][i,"imp2"] = sample(x=c(1:4), replace=T,size=1, prob = implist[[m]][i,c("p1","p2","p3","p4")])
-      }
-  }#end loop over bootstraps
- slice_sample(implist[[3]], n=5) #sample 5 random rows from the results. 
- #NOTE: trueclass is from original data. the imputations are from the bootstrap samples
- #      we are interested in the total class proportions, so not in individual true & imputed classes
+for(m in 1:nboot){ #for each bootstrap sample
+  implist[[m]] <- df1
+  implist[[m]][,(6:9)] <-  posterior_function(dataset = bootdata[[m]], conditionals = LCAS2[[m]]$probs, Pclasses = LCAS2_probs[[m]])
+  for (i in 1:ssize) {
+    implist[[m]][i,"imp"] = which(rmultinom(1, 1, implist[[m]][i,c("p1","p2","p3","p4")]) == 1)
+    implist[[m]][i,"imp2"] = sample(x=c(1:4), replace=T,size=1, prob = implist[[m]][i,c("p1","p2","p3","p4")])
+  }
+}#end loop over bootstraps
+slice_sample(implist[[3]], n=5) #sample 5 random rows from the results. 
+#NOTE: trueclass is from original data. the imputations are from the bootstrap samples
+#      we are interested in the total class proportions, so not in individual true & imputed classes
 
 
 #-------------------------------5. Results-----------#
@@ -165,40 +165,40 @@ method = list(NA)
 #A. Overall group sizes
 trueclass <- prop.table(table(df1$trueclass)) #proportions original data
 
-  ## i. bias
-    for(m in 1:5){ #bias 
-      imp[[m]] <- prop.table(table(implist[[m]]$imp))
-      imp2[[m]] <- prop.table(table(implist[[m]]$imp2))
-      bias[[m]] <- trueclass-imp[[m]]
-      method[[m]] <- imp[[m]]-imp2[[m]]
-    }
-  bias #bias between group sizes of original data and the imputations of the bootstrap data
-    #pool bias
-  method #to see whether there is a difference between the two methods to impute the classes in step 4 (conclusion: there is no big difference)
-  ## ii. SE
-  st.er <- function(x) sd(x)/sqrt(length(x))
-  st.er()
-  #average standard error/Standard deviation over all replications  
-  
-  ## iii. coverage CI (prop times population value falls within 95% CI around estimate over all replications)
-  CI <-  confint(trueclass) #werkt alleen op lm objects
-  FunConfInt <- function(x){
-    interv <- function(x) 1.96*sd(x)/sqrt(length(x))
-    lower <- mean(x)-interv(x)
-    upper <- mean(x)+interv(x) 
-    Confid <- cbind(lower, upper)
-    return(Confid)
-  }
-  Capture <-  ifelse((CI[1]>0|CI[2]<0), 0, 1)
-  
+## i. bias
+for(m in 1:5){ #bias 
+  imp[[m]] <- prop.table(table(implist[[m]]$imp))
+  imp2[[m]] <- prop.table(table(implist[[m]]$imp2))
+  bias[[m]] <- trueclass-imp[[m]]
+  method[[m]] <- imp[[m]]-imp2[[m]]
+}
+bias #bias between group sizes of original data and the imputations of the bootstrap data
+#pool bias
+method #to see whether there is a difference between the two methods to impute the classes in step 4 (conclusion: there is no big difference)
+## ii. SE
+st.er <- function(x) sd(x)/sqrt(length(x))
+st.er()
+#average standard error/Standard deviation over all replications  
 
-    
-  ## iv. ME
-  
-  
-  #accuracy = Correct classifications/Total cases
-  
-  #create confusion matrix? we are interested in population totals, not in classifications right?
+## iii. coverage CI (prop times population value falls within 95% CI around estimate over all replications)
+CI <-  confint(trueclass) #werkt alleen op lm objects
+FunConfInt <- function(x){
+  interv <- function(x) 1.96*sd(x)/sqrt(length(x))
+  lower <- mean(x)-interv(x)
+  upper <- mean(x)+interv(x) 
+  Confid <- cbind(lower, upper)
+  return(Confid)
+}
+Capture <-  ifelse((CI[1]>0|CI[2]<0), 0, 1)
+
+
+
+## iv. ME
+
+
+#accuracy = Correct classifications/Total cases
+
+#create confusion matrix? we are interested in population totals, not in classifications right?
 
 #B. Relationship with covariate
 
