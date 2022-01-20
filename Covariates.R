@@ -20,8 +20,9 @@ matrix(c(0.3, 0.7,
 matrix(c(0.5, 0.5,
          0.5, 0.5), ncol=2, byrow=T) # (For selection error part)
 
-matrix(c((1/3), (1/3), (1/3),
-         (1/3), (1/3), (1/3)), ncol=2, byrow=T)  # (For classification error part)
+matrix(c((1/3), (1/3), 
+         (1/3), (1/3), 
+         (1/3), (1/3)), ncol=2, byrow=T)  # (For classification error part)
 
 #note: one covariate will be correlated with selection, and one with classification error.
 #-> relations might not remain as accurate as we simulated

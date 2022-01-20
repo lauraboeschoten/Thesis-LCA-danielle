@@ -1,7 +1,4 @@
 #2. Bootstrap step 
-cbind(head(Dat_var_A), head(Dat_var_B), head(Dat_var_C), head(Dat_var_D))
-#take m bootstrap samples from the original dataset. We use m=5 (this is sufficient, see Boeschoten (2017))
-#sample from  posterior membership probabilities
 
 library(tidyverse)
 library(confreq)
@@ -27,19 +24,12 @@ boots = rmultinom(nboot,
                   dffreq$n/sum(dffreq$n))
 dfboot= cbind(dffreq, boots)
 dfboot
-4^4 #256 different possible score patterns
-256*4 #four classes so 1024 different posterior membership probabilities 
+data1 <- list(NA)
 for (i in 5:10) { #for the original freq pattern and the five bootstrapped patterns
-  data1 <- as.data.frame(confreq::fre2dat(dfboot[,c(1:4, i)])) #converge frequency table to dataframe
+  data1[[(i-4)]] <- as.data.frame(confreq::fre2dat(dfboot[,c(1:4, i)])) #converge frequency table to dataframe
   assign(paste0("BootstrappedData",(i-4)), data1, envir = .GlobalEnv) #store the datasets to global environment
 }
-varD_boots <- list(BootstrappedData1, BootstrappedData2, BootstrappedData3, BootstrappedData4, BootstrappedData5, BootstrappedData6)
-BootstrappedData6
-boots_5 <- list(BootstrappedData1, BootstrappedData2, BootstrappedData3, BootstrappedData4, BootstrappedData5)
-save.image("bootstrap_dataset_RR.RData")
+data1
 
-
-#create dataset per bootstrap sample with the following code:
-as.data.frame(confreq::fre2dat(dfboot[,c(1:4, i)])) #converge frequency table to dataframe
 
 

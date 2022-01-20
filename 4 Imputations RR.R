@@ -59,7 +59,7 @@ for(k in 1:nboot){
     implist[[k]][j,"imp"] = which(rmultinom(1, 1, implist[[k]][j,c("p1","p2","p3","p4")]) == 1)
   }
 }
-head(implist[[1]])
+head(implist[[2]])
 
 table(implist[[1]]$imp-implist[[1]]$trueclass)
 
