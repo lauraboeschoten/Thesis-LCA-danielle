@@ -3,6 +3,7 @@
 #necessary packages
 library(poLCA) #for data simulation
 library(confreq) #used for making bootstrap datasets
+library(tidyverse)
 
 #-------------------------------1. DATA SIMULATION-----------#
 
@@ -59,6 +60,7 @@ try2$P #proportions of each class
 # aggregate data
 dffreq <- df1[,1:4] %>% 
   count(Y1, Y2, Y3, Y4)
+
 
 #-------------------------------2. BOOTSTRAP DATA-----------#
 
@@ -155,7 +157,6 @@ implist = list(NA) #store results
  #NOTE: trueclass is from original data. the imputations are from the bootstrap samples
  #      we are interested in the total class proportions, so not in individual true & imputed classes
 
-
 #-------------------------------5. Results-----------#
 imp = list(NA)
 imp2 = list(NA)
@@ -174,6 +175,12 @@ trueclass <- prop.table(table(df1$trueclass)) #proportions original data
     }
   bias #bias between group sizes of original data and the imputations of the bootstrap data
     #pool bias
+  par(mfrow=c(2,3))
+  for(m in 1:5){plot(bias[[m]],main = paste("Bias of bootstrap", m), ylab="Bias", xlab= "Classes", ylim = c(-.15, 0.15), type="p", pch=4, abline(h=0), add=T)}
+  
+  #confusion matrix with true/false
+  trueclass-imp[[2]]
+  imp[[2]]
   method #to see whether there is a difference between the two methods to impute the classes in step 4 (conclusion: there is no big difference)
   ## ii. SE
   st.er <- function(x) sd(x)/sqrt(length(x))
