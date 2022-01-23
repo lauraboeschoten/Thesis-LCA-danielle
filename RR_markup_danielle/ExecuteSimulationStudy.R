@@ -18,5 +18,7 @@ source("2_BootstrapData.R")   #Bootstrap the data
 source("3_LCmodel.R")         #apply LC model to the data
 source("4_Imputations.R")     #create imputations by sampling from the posterior probabilities
 source("5_Results.R")         #Calculate bias of the overall group sizes (proportions of the classes)
-Average #the results
+Average #the pooled average class sizes
+trueclass #original simulated class sizes
+bias = Average-trueclass
 save.image("Simulation_Multivariate.RData")
