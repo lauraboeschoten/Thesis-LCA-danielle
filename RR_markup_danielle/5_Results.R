@@ -1,6 +1,7 @@
 #-------------------------------5. Results-----------#
 load("imputations_RR.RData")
-library(reshape2)
+df1 = list(NA)
+implist = list(NA)
 prop.classes = list(NA)
 bias = list(NA)
 SimProp.classes = list(NA)
@@ -16,21 +17,13 @@ trueclass <- prop.table(table(df1$trueclass)) #proportions original data
 for(m in 1:5){ #bias 
   prop.classes[[m]] <- prop.table(table(implist[[m]]$imp))
   bias[[m]] <- trueclass-prop.classes[[m]]
+  #First pool within simulation the 5 imputations
+  Pooled.prop.classes <- rowMeans(sapply(prop.classes, unlist))
 }
-Pooled.prop.classes <- 1
-rowMeans(sapply(prop.classes, unlist))
 
-sapply(prop.classes, FUN=mean, n=5)
-SimProp.classes[[sim]] = prop.classes #list of nsim lists, with each nboot (=5) lists with the imputed class proportions
-SimBias[[sim]] = bias #list of nsim lists, with each nboot (=5) lists with the bias of the imputations of each bootstrap sample
+SimProp.classes[[sim]] <- Pooled.prop.classes #pooled mean group sizes per simulation iteration
+Average <- rowMeans(sapply(SimProp.classes, unlist))
 
-#pool bias
-
-#First pool within simulation the 5 imputations
-
-
-Pooled.prop.classes <- 1
-sapply(X= testset, FUN=mean, n=5)
-
+return(Average)
 } #end loop over simulations
 save.image("Results_RR.RData")

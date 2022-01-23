@@ -2,7 +2,7 @@
 load("bootstraps_RR.RData")
 library(confreq) #used for making bootstrap datasets
 SimData = SimData #keep the dataset in the .RData file
-
+dfboot = dfboot #keep the bootstrapped datasets .RData file
 LCASIM = list(NA) #empty list to store simulation results in
 for (sim in 1:nsim) { #iteration over number of simulations
 #store results

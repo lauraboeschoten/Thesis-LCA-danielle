@@ -18,6 +18,5 @@ boots = rmultinom(nboot,
                   sum(dffreq$n), 
                   dffreq$n/sum(dffreq$n))
 dfboot[[sim]]= cbind(dffreq, boots)
-
 } #end bootstrap script
 save.image("bootstraps_RR.RData")
