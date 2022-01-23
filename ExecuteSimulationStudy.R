@@ -2,27 +2,23 @@
 
 #load required packages
 library(poLCA) #for data simulation
+library(dplyr) #for data manipulation
 library(confreq) #used for making bootstrap datasets 
 
-#load simulation/evaluation functions
-source("Functions/Simulate.R")
-source("Functions/NAME.R") #Barnard and Rubin (1999) df rules used
 
 #simulation parameters
-nboot = 5
-populationsize = 1000
-nsim = 10000
+nsim = 10 #increase to higher number of simulations when you have the time
+nboot = 5 #FIXED, nboot determines the number of imputations per simulation iteration. 5 is sufficient.
+populationsize = 5000 #for the data simulation
 
 #execute respective scripts
-source("Simulation conditions/Simulation_multivariate 10.R")
-source("Simulation conditions/Simulation_multivariate 20.R")
-
+source("1_SimulateData.R")    #Simulate the data
+source("2_BootstrapData.R")   #Bootstrap the data
+source("3_LCmodel.R")         #apply LC model to the data
+source("4_Imputations.R")     #create imputations by sampling from the posterior probabilities
+source("5_Results.R")         #Calculate bias of the overall group sizes (proportions of the classes)
 
 rm(SIM)
 
 
-#R file with all steps for MILC simulation study (data simulation, bootstraps,LC model, imputations, and results)
-
-
-
-save.image("Workspaces/Simulation_Multivariate.RData")
+save.image("Simulation_Multivariate.RData")

@@ -1,7 +1,10 @@
 #-------------------------------3. LCA STEP + LABEL check and correction -----------#
 load("bootstraps_RR.RData")
 library(confreq) #used for making bootstrap datasets
+SimData = SimData #keep the dataset in the .RData file
 
+LCASIM = list(NA) #empty list to store simulation results in
+for (sim in 1:nsim) { #iteration over number of simulations
 #store results
 bootdata <- list(NA)
 LCAS <- list(NA)
@@ -13,7 +16,7 @@ LCAS2_probs <- list(NA)
 set.seed(123)
 for (i in 1:5) {
   #create dataset per bootstrap sample with the following code:
-  bootdata[[i]] <- as.data.frame(confreq::fre2dat(dfboot[,c(1:4, (i+5))])) #converge frequency table to dataframe
+  bootdata[[i]] <- as.data.frame(confreq::fre2dat(dfboot[[sim]][,c(1:4, (i+5))])) #converge frequency table to dataframe
   #run LC model on each bootstrap sample
   LCAS[[i]] = poLCA(formula = cbind(Y1, Y2, Y3, Y4) ~ 1,  
                     bootdata[[i]],       nclass = 4,      nrep = 10)
@@ -33,8 +36,7 @@ for (i in 1:5) {
   # WARNING: other elements in the LC output are not switched!! 
   LCAS2_probs[[i]] <-   LCAS2[[i]]$P #results, to check if label detection algorithm worked
 }
-
-LCAS_probs #old P's with switched labels
-LCAS2_probs #relabelled P's 
+LCASIM[[sim]] <- LCAS2
+}#end of LC model script
 save.image("poLCA_and_Posteriors_RR.RData")
 

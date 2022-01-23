@@ -1,22 +1,36 @@
 #-------------------------------5. Results-----------#
 load("imputations_RR.RData")
-
-imp = list(NA)
-imp2 = list(NA)
+library(reshape2)
+prop.classes = list(NA)
 bias = list(NA)
-method = list(NA)
+SimProp.classes = list(NA)
+SimBias = list(NA)
 
+for (sim in 1:nsim) { #iteration over number of simulations
+  df1 <- SimData[[sim]] #assign dataframe of 1 simulation to "df1"
+  implist <- ImpSim[[sim]] 
 #Overall group sizes
 trueclass <- prop.table(table(df1$trueclass)) #proportions original data
 
-##bias
+#calculate bias between group sizes of original data and the imputations of the bootstrap data
 for(m in 1:5){ #bias 
-  imp[[m]] <- prop.table(table(implist[[m]]$imp))
-  bias[[m]] <- trueclass-imp[[m]]
+  prop.classes[[m]] <- prop.table(table(implist[[m]]$imp))
+  bias[[m]] <- trueclass-prop.classes[[m]]
 }
-bias #bias between group sizes of original data and the imputations of the bootstrap data
-#pool bias
-par(mfrow=c(2,3))
-for(m in 1:5){plot(bias[[m]],main = paste("Bias of bootstrap", m), ylab="Bias", xlab= "Classes", ylim = c(-.15, 0.15), type="p", pch=4, abline(h=0), add=T)}
+Pooled.prop.classes <- 1
+rowMeans(sapply(prop.classes, unlist))
 
+sapply(prop.classes, FUN=mean, n=5)
+SimProp.classes[[sim]] = prop.classes #list of nsim lists, with each nboot (=5) lists with the imputed class proportions
+SimBias[[sim]] = bias #list of nsim lists, with each nboot (=5) lists with the bias of the imputations of each bootstrap sample
+
+#pool bias
+
+#First pool within simulation the 5 imputations
+
+
+Pooled.prop.classes <- 1
+sapply(X= testset, FUN=mean, n=5)
+
+} #end loop over simulations
 save.image("Results_RR.RData")

@@ -1,0 +1,59 @@
+---
+title: "ReadMe"
+author: "Daniëlle Remmerswaal"
+date: "23-1-2022"
+output: 
+  html_document:
+    keep_md: yes
+    toc: true
+    number_sections: yes
+    
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+This repository contains all necessary files to replicate the simulation study for the MSc thesis "Comparing MILC and tree-MILC for estimating and correcting multiple types of errors in combined datasets" by Daniëlle Remmerswaal. Software requirements are R (http://www.r-project.org}) and R-package poLCA (version 1.4.1, https://cran.r-project.org/web/packages/poLCA/index.html).
+
+**Overview**
+
+| Files/Folders          | Description   |
+| -----------------      | ------------- |
+|Execute.R              |R-script to run the simulation study|
+|1_SimulateData.R       |R-script to simulate data|
+|2_BootstrapData.R      |R-script to bootstrap data|
+|3_LCmodel.R            |R-script to apply LC model|
+|4_Imputations.R        |R-script to draw imputations|
+|5_Results.R            |R-script to calculate results|
+
+|Reference PDF.pdf      |The reference pdf titled "Pooling multiple imputations when the sample happens to be the population" by Gerko Vink and Stef van Buuren|
+|/Functions             |Folder containing the functions used by '1. Execute.R'|
+|/Simulation conditions |Folder that contains the simulation conditions executed by '1. Execute.R'|
+|/Workspaces            |'Folder containing the final simulated data R-workspace as obtained by running '1. Execute.R' |
+
+**Parts of the simulation study**
+# Simulate the data
+file: 1_SimulateData.R
+
+# Bootstrap the data
+file: 2_BootstrapData.R
+
+# Apply LC model
+file: 3_LCmodel.R
+
+# Draw imputations
+file: 4_Imputations.R
+
+# Calculate Results
+file: 5_Results.R
+
+
+
+
+
+For any help with the files in this archive, please contact Daniëlle Remmerswaal (d.m.remmerswaal@uu.nl).
+
+

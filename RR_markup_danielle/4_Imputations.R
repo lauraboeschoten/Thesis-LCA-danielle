@@ -1,8 +1,14 @@
 #--------------4. function to calculate the posterior probabilities and imputations of the classes-----------#
 load("poLCA_and_Posteriors_RR.RData")
-
+SimData = SimData #keep the dataset in the .RData file
+ImpSim = list(NA) #empty list to store simulation results in
+df1 = list(NA)
+LCAS2 = list(NA)
+for (sim in 1:nsim) { #iteration over number of simulations
+  df1 = SimData[[sim]]
+  LCAS2 = LCASIM[[sim]]
 # create empty columns to store calculated posteriors
-df1[,c("p1","p2","p3","p4","imp", "imp2")] <- NA 
+df1[,c("p1","p2","p3","p4","imp")] <- NA 
 ssize=5000
 
 #create storage 
@@ -31,13 +37,13 @@ colnames(posterior_probs) <- c("p1", "p2", "p3", "p4")
 implist = list(NA) #create storage
 for(m in 1:nboot){ #for each bootstrap sample
   implist[[m]] <- df1
-  implist[[m]][,(6:9)] <-  posterior_function(dataset = bootdata[[m]], conditionals = LCAS2[[m]]$probs, Pclasses = LCAS2_probs[[m]])
- #create imputations by sampling from the posterior probabilities
-   for (i in 1:ssize) {implist[[m]][i,"imp"] = sample(x=c(1:4), replace=T,size=1, prob = implist[[m]][i,c("p1","p2","p3","p4")])}
-}#end loop over bootstraps
-slice_sample(implist[[3]], n=5) #sample 5 random rows from the results. 
+  implist[[m]][,(6:9)] <-  posterior_function(dataset = df1[[m]], conditionals = LCAS2[[m]]$probs, Pclasses = LCAS2[[m]]$P)
+    #create imputations by sampling from the posterior probabilities
+    for (i in 1:ssize) {implist[[m]][i,"imp"] = sample(x=c(1:4), replace=T,size=1, prob = implist[[m]][i,c("p1","p2","p3","p4")])}
+  }#end loop over bootstraps
+
 #NOTE: trueclass is from original data. the imputations are from the bootstrap samples
 #      we are interested in the total class proportions, so not in individual true & imputed classes
-
+ImpSim[[sim]] <- implist
+}#end loop over simulations
 save.image("imputations_RR.RData")
-
