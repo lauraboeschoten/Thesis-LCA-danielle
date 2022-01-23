@@ -198,8 +198,12 @@ trueclass <- prop.table(table(df1$trueclass)) #proportions original data
   }
   Capture <-  ifelse((CI[1]>0|CI[2]<0), 0, 1)
   
-
-    
+#https://stackoverflow.com/questions/24478531/mean-of-vector-inside-of-list-of-lists
+  #attempt to calculate mean over imputations and simulations
+  testset <- melt(SimProp.classes)
+  testset$time <- with(testset, ave(rep(1, nrow(testset)), L1, L2, FUN = seq_along))
+  dcast(testset, L2 ~ time, value.var="value", fun.aggregate=mean)
+  
   ## iv. ME
   
   
