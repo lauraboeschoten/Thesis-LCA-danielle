@@ -35,8 +35,12 @@ for (i in 1:5) {
   LCAS2[[i]]$P        = LCAS[[i]]$P[c(as.numeric(paste(order)))]
   # WARNING: other elements in the LC output are not switched!! 
   LCAS2_probs[[i]] <-   LCAS2[[i]]$P #results, to check if label detection algorithm worked
-}
-LCASIM[[sim]] <- LCAS2
+  
+} 
+  #LCASIM[[2]][[5]]$probs  #hier staat de diagonaal met de highest probs de andere kant op...
+  
+
+LCASIM[[sim]] <- LCAS2 #The objects of LCAS2 with reassigned labels for each of the simulations get stored in the list LCASIM (now a list of lists)
 }#end of LC model script
 save.image("poLCA_and_Posteriors_RR.RData")
 

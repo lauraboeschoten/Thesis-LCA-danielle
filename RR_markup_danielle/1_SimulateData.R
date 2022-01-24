@@ -6,8 +6,8 @@ library(dplyr) #for data manipulation
 #Variant A (5% selection error and 5% measurement error)
 options(scipen = 999)
 set.seed(123)
-nsim=10
 populationsize = 5000
+#nsim=5  #remove # in front if you run this script seperately (and not all scripts together in the executeSimulation.R file) 
 
 SimData = list(NA) #empty list to store simulated data in
 for (sim in 1:nsim) { #iteration over number of simulations
