@@ -39,10 +39,10 @@ for(i in 1:nboot){
   ## store LC output under a new name
   LCAS2[[i]] = LCAS[[i]]
   
-  LCAS2[[i]]$probs$Y1 = LCAS[[i]]$probs$Y1[,c(as.numeric(paste(order)))]
-  LCAS2[[i]]$probs$Y2 = LCAS[[i]]$probs$Y2[,c(as.numeric(paste(order)))]
-  LCAS2[[i]]$probs$Y3 = LCAS[[i]]$probs$Y3[,c(as.numeric(paste(order)))]
-  LCAS2[[i]]$probs$Y4 = LCAS[[i]]$probs$Y4[,c(as.numeric(paste(order)))]
+  LCAS2[[i]]$probs$Y1 = LCAS[[i]]$probs$Y1[c(as.numeric(paste(order))),]
+  LCAS2[[i]]$probs$Y2 = LCAS[[i]]$probs$Y2[c(as.numeric(paste(order))),]
+  LCAS2[[i]]$probs$Y3 = LCAS[[i]]$probs$Y3[c(as.numeric(paste(order))),]
+  LCAS2[[i]]$probs$Y4 = LCAS[[i]]$probs$Y4[c(as.numeric(paste(order))),]
   LCAS2[[i]]$P        = LCAS[[i]]$P[c(as.numeric(paste(order)))]
   
   # WARNING: other elements in the LC output are not switched!! 
